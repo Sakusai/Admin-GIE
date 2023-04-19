@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Event Agenda
+Plugin Name: GIE Event Agenda
 Description: Ce plugin ajoute un sous-menu d'Article appelé Événement, qui va permettre d'ajouter, modifier ou supprimer un événement, avec le même fonctionnement qu'un article
 Author: Maton Erwann / GIE Convergence
 Version: 1.0
