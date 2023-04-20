@@ -29,6 +29,7 @@ add_action( 'admin_init', 'events_register_settings' );
  */
 function events_register_settings() {
     register_setting( 'events_options_group', 'events_slides_to_show' );
+    register_setting( 'events_options_group', 'events_slides_format' );
 }
 
 /**
@@ -36,7 +37,8 @@ function events_register_settings() {
  */
 function events_render_settings_page() {
     $slides_to_show = get_option( 'events_slides_to_show', 4 );
-    ?>
+    $slides_format = get_option( 'events_slides_format', 1 );
+?>
     <div class="wrap">
         <h1><strong>Réglages des événements</strong></h1>
         <h2>Carrousel</h2>
@@ -48,11 +50,22 @@ function events_render_settings_page() {
                     <th scope="row">Nombre de slides à afficher</th>
                     <td>
                         <input type="number" name="events_slides_to_show" min="3" max="6" value="<?php echo esc_attr( $slides_to_show ); ?>">
+                        De 3 à 6 slides affiché en même temps.
+                    </td>
+                </tr>
+            </table>
+            <?php do_settings_sections( 'events_slides_format' ); ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Format des sliders</th>
+                    <td>
+                        <input type="number" name="events_slides_format" min="1" max="2" value="<?php echo esc_attr( $slides_format ); ?>">
+                        Format 1 ou 2.
                     </td>
                 </tr>
             </table>
             <?php submit_button( 'Enregistrer les réglages', 'primary', 'events_submit_button' ); ?>
         </form>
     </div>
-    <?php
+<?php
 }

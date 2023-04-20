@@ -46,7 +46,89 @@
   font-size: 0.9em;
 }
 /* Css du carrousel du fichier event-slider.php */
-.slider{
+/* Version 1 */
+.slider {
+  position: relative;
+  margin: 5px;
+  height: 400px;
+  background: linear-gradient(to bottom right, #143c66, #141f66);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.slider h1 {
+  text-align: center;
+  font-size: 24px;
+  margin: 10px 0 0 0;
+}
+
+.slider h2 {
+  font-size: 18px;
+  color: white;
+  margin: 0;
+}
+
+.color-a {
+  color: white;
+}
+
+.read-more {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 14px;
+}
+
+.img {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.5s ease-in-out;
+}
+
+.img:hover img {
+  transform: scale(1.1);
+}
+
+.date-box {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 60px;
+  height: 60px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.date {
+  font-size: 16px;
+  font-weight: bold;
+  color: #143c66;
+  margin: 0;
+}
+
+.place-date{
+  position: absolute;
+  text-align: left;
+  bottom: 50px;
+  left: 10px;
+  font-size: 14px;
+}
+
+/* Version 2 */
+
+.slider2{
   position: relative;
   text-align: left;
   margin: 5px;
@@ -55,12 +137,12 @@
   padding: 10px;
 }
 
-.slider h1 {
+.h1slid2  {
   margin-top: 8px;
   font-size: 18px;
 }
 
-.slider h2{
+.h2slid2{
   font-size: 16px;
 }
 
@@ -71,7 +153,7 @@
   line-height: 1.1;
 }
 
-.read-more{
+.read-more2{
   margin:auto;
   position: absolute;
   bottom: 5px;
@@ -79,13 +161,13 @@
   font-size: 0.9em;
 }
 
-.img{
+.img2{
   display: flex;
   justify-content: center;
   top: 50%;
   height: 180px;
 }
 
-.date {
+.date2 {
   text-decoration: underline;
 }

@@ -30,6 +30,7 @@ function slider_events_shortcode() {
         $events->the_post(); // Enlève le premier événement de la liste 
         $event_id = get_the_ID();
         $event_start_date =  date('d-m-Y', strtotime(get_post_meta( $event_id, 'event_start_date', true )));
+        $event_day_month = date('d / m', strtotime(get_post_meta( $event_id, 'event_start_date', true )));
         $event_start_hour = get_post_meta( $event_id, 'event_start_hour', true );
         $slides_to_show = get_option( 'events_slides_to_show', 4 );
         $content = get_the_content($event_id);
@@ -54,25 +55,49 @@ function slider_events_shortcode() {
                 $i++;
             }
         }
+        $slides_format = get_option( 'events_slides_format', 1 );
+        if ($slides_format == 1)
+        {
         ?>
         
         <div class="slider">
             <p class="img">
-                <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail( array( 300, 180 ) ); ?></a>
+                <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail( array( 300, 300 ) ); ?></a>
             </p>
-            <h1>    
-                <a href="<?php the_permalink(); ?>"> <strong><?php the_title();?> </strong> </a>
-            </h1>
-            <h2 class="date"> <?php echo $event_start_date . " à " . str_replace(":", "h", $event_start_hour)  ; ?> </h2>
-            <h2><strong><?php echo $event_place_text?></strong></h2>
-            <p><?php echo $apercu_description . "..."; ?></p>
-            <p class="read-more">
-                <a  href="<?php the_permalink(); ?>">Lire la suite</a>
-            </p>
+            <div class="date-box">
+                <h3 class="date"><?php echo $event_day_month; ?></h3>
+            </div>
+            <h1><a href="<?php the_permalink(); ?>" class="color-a"><strong><?php the_title();?></strong></a></h1>
+            <div class="place-date">
+                <h2 class="slid-date"><strong><?php echo str_replace(":", "h", $event_start_hour); ?></strong></h2>
+                <h2><strong><?php echo $event_place_text;?></strong></h2>
+            </div>
+            <p class="read-more"><a href="<?php the_permalink(); ?>" class="color-a">Lire la suite</a></p>
         </div>
+
         
 
     <?php }
+    
+    else{
+        ?>
+        <div class="slider2">
+        <p class="img2">
+            <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail( array( 300, 180 ) ); ?></a>
+        </p>
+        <h1 class="h1slid2">    
+            <a href="<?php the_permalink(); ?>"> <strong><?php the_title();?> </strong> </a>
+        </h1>
+        <h2 class="date2 h2slid2"> <?php echo $event_start_date . " à " . str_replace(":", "h", $event_start_hour)  ; ?> </h2>
+        <h2 class="h2slid2"><strong><?php echo $event_place_text?></strong></h2>
+        <p><?php echo $apercu_description . "..."; ?></p>
+        <p class="read-more2">
+            <a  href="<?php the_permalink(); ?>">Lire la suite</a>
+        </p>
+    </div>
+    <?php
+    }
+    }
     ?>
     </div>
     <script type="text/javascript" src="<?php echo plugins_url( 'JS/jquery-3.6.4.min.js', __FILE__ ); ?>"></script>
