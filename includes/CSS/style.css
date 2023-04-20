@@ -71,6 +71,9 @@
 .color-a {
   color: white;
 }
+.color-a:hover {
+  color: #0d77e7;
+}
 
 .read-more {
   position: absolute;
