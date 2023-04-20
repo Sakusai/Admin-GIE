@@ -92,12 +92,16 @@
 }
 [dir='rtl'] .slick-prev:before
 {
-    content: '→';
+    content: '→'; 
 }
 
 .slick-next
 {
     right: -25px;
+}
+
+.slick-next, .slick-prev{
+    background-color: #ffffff00 !important; 
 }
 [dir='rtl'] .slick-next
 {
@@ -107,7 +111,12 @@
 .slick-next:before
 {
     content: '→';
+
 }
+.slick-next:before, .slick-prev:before{
+    color: #141f66;
+
+} 
 [dir='rtl'] .slick-next:before
 {
     content: '←';

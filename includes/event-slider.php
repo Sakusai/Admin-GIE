@@ -30,7 +30,11 @@ function slider_events_shortcode() {
         $events->the_post(); // Enlève le premier événement de la liste 
         $event_id = get_the_ID();
         $event_start_date =  date('d-m-Y', strtotime(get_post_meta( $event_id, 'event_start_date', true )));
-        $event_day_month = date('d / m', strtotime(get_post_meta( $event_id, 'event_start_date', true )));
+        $event_day = date('d', strtotime(get_post_meta( $event_id, 'event_start_date', true )));
+        $event_date = new DateTime(get_post_meta($event_id, 'event_start_date', true));
+        $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::NONE, IntlDateFormatter::NONE);
+        $formatter->setPattern('MMM');
+        $event_month = $formatter->format($event_date);
         $event_start_hour = get_post_meta( $event_id, 'event_start_hour', true );
         $slides_to_show = get_option( 'events_slides_to_show', 4 );
         $content = get_the_content($event_id);
@@ -60,18 +64,17 @@ function slider_events_shortcode() {
         {
         ?>
         
-        <div class="slider">
+        <div class="slider" style="height: <?php echo ($slides_to_show*70/3)+290?>px;">
             <p class="img">
                 <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail( array( 300, 300 ) ); ?></a>
             </p>
             <div class="date-box">
-                <h3 class="date"><?php echo $event_day_month; ?></h3>
+                <h3 class="date"><strong><?php echo $event_day; ?></strong></h3>
+                <h3 class="date"><strong><?php echo $event_month; ?></strong></h3>
             </div>
-            <h1><a href="<?php the_permalink(); ?>" class="color-a"><strong><?php the_title();?></strong></a></h1>
-            <div class="place-date">
-                <h2 class="slid-date"><strong><?php echo str_replace(":", "h", $event_start_hour); ?></strong></h2>
-                <h2><strong><?php echo $event_place_text;?></strong></h2>
-            </div>
+            <h1><a href="<?php the_permalink(); ?>" class="color-a"><?php the_title();?></a></h1>
+            <h2 class="hour"><strong><?php echo str_replace(":", "h", $event_start_hour); ?></strong></h2>
+            <h2 class="place"><?php echo $event_place_text;?></h2>
             <p class="read-more"><a href="<?php the_permalink(); ?>" class="color-a">Lire la suite</a></p>
         </div>
 

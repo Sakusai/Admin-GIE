@@ -3,7 +3,11 @@
 /**
  * Appel la fonction create_new_page quand wordpress est initialisé
  */
-add_action( 'init', 'create_event_page' );
+$events_page = get_option( 'events_page_auto', false);
+if($events_page === true){
+    add_action( 'init', 'create_event_page' );
+}
+
 
 /**
  * Crée une page Evénement qui fait appel au shortcode upcoming_events

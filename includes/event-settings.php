@@ -30,6 +30,11 @@ add_action( 'admin_init', 'events_register_settings' );
 function events_register_settings() {
     register_setting( 'events_options_group', 'events_slides_to_show' );
     register_setting( 'events_options_group', 'events_slides_format' );
+    register_setting( 'events_options_group', 'events_page_auto', array(
+        'type'         => 'boolean',
+        'default'      => false,
+        'sanitize_callback' => 'absint'
+    ));
 }
 
 /**
@@ -38,6 +43,7 @@ function events_register_settings() {
 function events_render_settings_page() {
     $slides_to_show = get_option( 'events_slides_to_show', 4 );
     $slides_format = get_option( 'events_slides_format', 1 );
+    $events_page = get_option( 'events_page_auto',false);
 ?>
     <div class="wrap">
         <h1><strong>Réglages des événements</strong></h1>
@@ -61,6 +67,16 @@ function events_render_settings_page() {
                     <td>
                         <input type="number" name="events_slides_format" min="1" max="2" value="<?php echo esc_attr( $slides_format ); ?>">
                         Format 1 ou 2.
+                    </td>
+                </tr>
+            </table>
+            <?php do_settings_sections( 'events_page_auto' ); ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Créer la page d'événements par mois</th>
+                    <td>
+                        <input type="hidden" name="events_page_auto" value="0">
+                        <input type="checkbox" name="events_page_auto" value="1" <?php checked( $events_page, true ); ?>>
                     </td>
                 </tr>
             </table>

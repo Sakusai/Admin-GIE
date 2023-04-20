@@ -48,17 +48,17 @@
 /* Css du carrousel du fichier event-slider.php */
 /* Version 1 */
 .slider {
+  padding: 10px;
   position: relative;
   margin: 5px;
-  height: 400px;
-  background: linear-gradient(to bottom right, #143c66, #141f66);
+  background: linear-gradient(to bottom right, #326e86, #141f66);
   border-radius: 10px;
   overflow: hidden;
 }
 
 .slider h1 {
   text-align: center;
-  font-size: 24px;
+  font-size: 28px;
   margin: 10px 0 0 0;
 }
 
@@ -72,7 +72,7 @@
   color: white;
 }
 .color-a:hover {
-  color: #0d77e7;
+  color: #91bcee;
 }
 
 .read-more {
@@ -93,6 +93,7 @@
   height: auto;
   object-fit: cover;
   transition: transform 0.5s ease-in-out;
+  border-radius: 2%;
 }
 
 .img:hover img {
@@ -101,34 +102,62 @@
 
 .date-box {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 15px;
+  left: 15px;
   width: 60px;
   height: 60px;
   background-color: white;
   border-radius: 50%;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   color: black;
+  overflow: hidden;
+  border: 3px solid #326e86;
+}
+.date-box h3.date:nth-child(1) {
+  position: absolute;
+  font-size: 22px;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
+.date-box h3.date:nth-child(2) {
+  position: absolute;
+  font-size: 15px;
+  bottom: 30%;
+  right: 50%;
+  transform: translate(50%, 50%);
+}
+
+.date-box:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 15%;
+  width: 70%;
+  height: 2px;
+  background-color: #326e86;
+}
 .date {
-  font-size: 16px;
+  letter-spacing: 1.1px;
+  font-size: 19px;
   font-weight: bold;
   color: #143c66;
   margin: 0;
 }
-
-.place-date{
-  position: absolute;
+ h2.place{
   text-align: left;
-  bottom: 50px;
-  left: 10px;
-  font-size: 14px;
+  font-size: 15px;
+  color: rgb(255, 255, 255);
 }
-
+h2.hour{
+  text-align: left;
+  font-size: 20px;
+  color: rgb(255, 255, 255);
+}
 /* Version 2 */
 
 .slider2{
