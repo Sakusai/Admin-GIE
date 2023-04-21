@@ -54,7 +54,7 @@ function create_event_page() {
         $menu_items = wp_get_nav_menu_items( 'Menu principal', array( 'object_id' => $page_query->post->ID ) );
             if ( $menu_items ) {
                 // Supprime la page du menu
-                $menu_item_id = wp_get_nav_menu_items( 'Menu principal' )[2]->ID;
+                $menu_item_id = wp_get_nav_menu_items( 'Menu principal' )[1]->ID;
                 foreach ( $menu_items as $menu_item ) {
                     wp_delete_post( $menu_item->ID, true );
                     wp_delete_post( $menu_item_id, true );

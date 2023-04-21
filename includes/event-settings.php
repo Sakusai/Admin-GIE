@@ -35,6 +35,7 @@ function events_register_settings() {
         'default'      => false,
         'sanitize_callback' => 'absint'
     ));
+    register_setting( 'events_options_group', 'events_slides_speed' );
 }
 
 /**
@@ -44,6 +45,7 @@ function events_render_settings_page() {
     $slides_to_show = get_option( 'events_slides_to_show', 4 );
     $slides_format = get_option( 'events_slides_format', 1 );
     $events_page_auto = get_option( 'events_page_auto', false );
+    $slides_speed = get_option('events_slides_speed', 3000);
     ?>
     <div class="wrap">
         <h1><strong>Réglages des événements</strong></h1>
@@ -83,6 +85,16 @@ function events_render_settings_page() {
                     <td>
                         <input type="hidden" name="events_page_auto" value="0">
                         <input type="checkbox" name="events_page_auto" value="1" <?php checked( $events_page_auto, true ); ?>>
+                    </td>
+                </tr>
+            </table>
+            <?php do_settings_sections( 'events_slides_speed' ); ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Vitesse de défilement des slides</th>
+                    <td>
+                        <input type="number" name="events_slides_speed" value="<?php echo esc_attr( $slides_speed ); ?>">
+                        En millisecondes.
                     </td>
                 </tr>
             </table>
