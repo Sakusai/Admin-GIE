@@ -105,6 +105,7 @@ function slider_events_shortcode() {
     }
     }
     $slides_speed = get_option('events_slides_speed', 3000);
+    $slides_speed_pass = get_option('events_slides_speed_pass', 300);
     $slides_auto = get_option('events_slides_auto', true);
     ?>
     </div>
@@ -116,7 +117,7 @@ function slider_events_shortcode() {
             $('.responsive').slick({
                 dots: true,
                 infinite: true,
-                speed: 300,
+                speed: <?php echo $slides_speed_pass ?>,
                 autoplay: <?php echo $slides_auto ?>,
                 autoplaySpeed:<?php echo $slides_speed ?>,
                 slidesToShow: <?php echo $slides_to_show ?>,

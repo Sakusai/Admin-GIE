@@ -36,6 +36,7 @@ function events_register_settings() {
         'sanitize_callback' => 'absint'
     ));
     register_setting( 'events_options_group', 'events_slides_speed' );
+    register_setting( 'events_options_group', 'events_slides_speed_pass' );
     register_setting( 'events_options_group', 'events_slides_auto', array(
         'type'         => 'boolean',
         'default'      => true,
@@ -61,6 +62,7 @@ function events_render_settings_page() {
     $slides_format = get_option( 'events_slides_format', 1 );
     $events_page_auto = get_option( 'events_page_auto', false );
     $slides_speed = get_option('events_slides_speed', 3000);
+    $slides_speed_pass = get_option('events_slides_speed_pass', 300);
     $slides_auto = get_option('events_slides_auto', true);
     $background_color = get_option( 'events_background_color', '#ffffff' );
     $font_family = get_option('events_font_family', 'Arial');
@@ -122,6 +124,16 @@ function events_render_settings_page() {
                     <th scope="row">Vitesse de défilement des slides</th>
                     <td>
                         <input type="number" name="events_slides_speed" value="<?php echo esc_attr( $slides_speed ); ?>">
+                        En millisecondes.
+                    </td>
+                </tr>
+            </table>
+            <?php do_settings_sections( 'events_slides_speed_pass' ); ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Vitesse de passage d'une slide à une autre</th>
+                    <td>
+                        <input type="number" name="events_slides_speed_pass" value="<?php echo esc_attr( $slides_speed_pass ); ?>">
                         En millisecondes.
                     </td>
                 </tr>
