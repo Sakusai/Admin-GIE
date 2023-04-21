@@ -62,7 +62,6 @@ function slider_events_shortcode() {
         $slides_format = get_option( 'events_slides_format', 1 );
         $background_color = get_option( 'events_background_color', '#ffffff' );
         $font_family = get_option('events_font_family', 'Arial');
-        $font_size = get_option('events_font_size', '16px');
         if ($slides_format == 1)
         {
         ?>
@@ -106,7 +105,10 @@ function slider_events_shortcode() {
     }
     $slides_speed = get_option('events_slides_speed', 3000);
     $slides_speed_pass = get_option('events_slides_speed_pass', 300);
-    $slides_auto = get_option('events_slides_auto', true);
+    $slides_auto = get_option('events_slides_auto');
+    $slides_infinite = get_option('events_slides_infinite');
+
+
     ?>
     </div>
     <script type="text/javascript" src="<?php echo plugins_url( 'JS/jquery-3.6.4.min.js', __FILE__ ); ?>"></script>

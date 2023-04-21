@@ -42,6 +42,11 @@ function events_register_settings() {
         'default'      => true,
         'sanitize_callback' => 'absint'
     ));
+    register_setting( 'events_options_group', 'events_slides_infinite', array(
+        'type'         => 'boolen',
+        'default'      => true,
+        'sanitize_callback' => 'absint'
+));
     register_setting( 'events_options_group', 'events_background_color', array(
         'type'         => 'string',
         'default'      => '#ffffff',
@@ -61,6 +66,7 @@ function events_render_settings_page() {
     $slides_to_show = get_option( 'events_slides_to_show', 4 );
     $slides_format = get_option( 'events_slides_format', 1 );
     $events_page_auto = get_option( 'events_page_auto', false );
+    $slides_infinite = get_option('events_slides_infinite',true);
     $slides_speed = get_option('events_slides_speed', 3000);
     $slides_speed_pass = get_option('events_slides_speed_pass', 300);
     $slides_auto = get_option('events_slides_auto', true);
@@ -70,9 +76,10 @@ function events_render_settings_page() {
     <div class="wrap">
         <h1><strong>Réglages des événements</strong></h1>
         <h2>Carrousel</h2>
+        <!-- Formulaire des réglages possible -->
         <form method="post" action="options.php">
-            <?php settings_fields( 'events_options_group' ); ?>
-            <?php do_settings_sections( 'events_slides_to_show' ); ?>
+            <?php settings_fields( 'events_options_group' ); ?> <!-- Sélection de l'emplacement des réglages -->
+            <?php do_settings_sections( 'events_slides_to_show' ); ?> <!-- Selection du réglage qui permet de choisir combien de slides on affiche en même temps -->
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Nombre de slides à afficher</th>
@@ -82,7 +89,7 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
-            <?php do_settings_sections( 'events_slides_format' ); ?>
+            <?php do_settings_sections( 'events_slides_format' ); ?> <!-- Sélection du réglage qui permet de chosir le format des slides -->
             <table class="form-table">
                 <tr valign="top">
                 <th scope="row">Format des slides</th>
@@ -98,10 +105,10 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
-            <?php do_settings_sections( 'events_page_auto' ); ?>
+            <?php do_settings_sections( 'events_page_auto' ); ?> <!-- Sélection du réglage  -->
             <table class="form-table">
                 <tr valign="top">
-                    <th scope="row">Créer la page d'événements par mois</th>
+                    <th scope="row">Page d'événements par mois</th>
                     <td>
                         <input type="hidden" name="events_page_auto" value="0">
                         <input type="checkbox" name="events_page_auto" value="1" <?php checked( $events_page_auto, true ); ?>>
@@ -115,6 +122,17 @@ function events_render_settings_page() {
                     <td>
                         <input type="hidden" name="events_slides_auto" value="0">
                         <input type="checkbox" name="events_slides_auto" value="1" <?php checked( $slides_auto, true ); ?>>
+                    </td>
+                </tr>
+            </table>
+            <?php do_settings_sections( 'events_slides_infinite' ); ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Slides en boucle</th>
+                    <td>
+                        <input type="hidden" name="events_slides_infinite" value="0">
+                        <input type="checkbox" name="events_slides_infinite" value="1" <?php checked( $slides_infinite, true ); ?>>
+                        A corriger
                     </td>
                 </tr>
             </table>
