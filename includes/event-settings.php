@@ -41,6 +41,11 @@ function events_register_settings() {
         'default'      => true,
         'sanitize_callback' => 'absint'
     ));
+    register_setting( 'events_options_group', 'events_background_color', array(
+        'type'         => 'string',
+        'default'      => '#ffffff',
+        'sanitize_callback' => 'sanitize_hex_color'
+    ));
 }
 
 /**
@@ -52,6 +57,7 @@ function events_render_settings_page() {
     $events_page_auto = get_option( 'events_page_auto', false );
     $slides_speed = get_option('events_slides_speed', 3000);
     $slides_auto = get_option('events_slides_auto', true);
+    $background_color = get_option( 'events_background_color', '#ffffff' );
     ?>
     <div class="wrap">
         <h1><strong>Réglages des événements</strong></h1>
@@ -111,6 +117,15 @@ function events_render_settings_page() {
                     <td>
                         <input type="number" name="events_slides_speed" value="<?php echo esc_attr( $slides_speed ); ?>">
                         En millisecondes.
+                    </td>
+                </tr>
+            </table>
+            <?php do_settings_sections( 'events_background_color' ); ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Couleur de fond</th>
+                    <td>
+                        <input type="color" name="events_background_color" value="<?php echo esc_attr( $background_color ); ?>">
                     </td>
                 </tr>
             </table>

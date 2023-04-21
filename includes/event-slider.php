@@ -60,11 +60,12 @@ function slider_events_shortcode() {
             }
         }
         $slides_format = get_option( 'events_slides_format', 1 );
+        $background_color = get_option( 'events_background_color', '#ffffff' );
         if ($slides_format == 1)
         {
         ?>
         
-        <div class="slider" style="height: <?php echo ($slides_to_show*70/3)+290?>px;">
+        <div class="slider" style="height: <?php echo ($slides_to_show*70/3)+290?>px; background: <?php echo $background_color ?>;">
             <p class="img">
                 <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail( array( 300, 300 ) ); ?></a>
             </p>
