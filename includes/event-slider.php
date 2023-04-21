@@ -102,6 +102,7 @@ function slider_events_shortcode() {
     }
     }
     $slides_speed = get_option('events_slides_speed', 3000);
+    $slides_auto = get_option('events_slides_auto', true);
     ?>
     </div>
     <script type="text/javascript" src="<?php echo plugins_url( 'JS/jquery-3.6.4.min.js', __FILE__ ); ?>"></script>
@@ -113,7 +114,7 @@ function slider_events_shortcode() {
                 dots: true,
                 infinite: true,
                 speed: 300,
-                autoplay: true,
+                autoplay: <?php echo $slides_auto ?>,
                 autoplaySpeed:<?php echo $slides_speed ?>,
                 slidesToShow: <?php echo $slides_to_show ?>,
                 slidesToScroll: 1,

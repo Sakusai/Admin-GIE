@@ -36,6 +36,11 @@ function events_register_settings() {
         'sanitize_callback' => 'absint'
     ));
     register_setting( 'events_options_group', 'events_slides_speed' );
+    register_setting( 'events_options_group', 'events_slides_auto', array(
+        'type'         => 'boolean',
+        'default'      => true,
+        'sanitize_callback' => 'absint'
+    ));
 }
 
 /**
@@ -46,6 +51,7 @@ function events_render_settings_page() {
     $slides_format = get_option( 'events_slides_format', 1 );
     $events_page_auto = get_option( 'events_page_auto', false );
     $slides_speed = get_option('events_slides_speed', 3000);
+    $slides_auto = get_option('events_slides_auto', true);
     ?>
     <div class="wrap">
         <h1><strong>Réglages des événements</strong></h1>
@@ -85,6 +91,16 @@ function events_render_settings_page() {
                     <td>
                         <input type="hidden" name="events_page_auto" value="0">
                         <input type="checkbox" name="events_page_auto" value="1" <?php checked( $events_page_auto, true ); ?>>
+                    </td>
+                </tr>
+            </table>
+            <?php do_settings_sections( 'events_slides_auto' ); ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Défilement automatique des slides</th>
+                    <td>
+                        <input type="hidden" name="events_slides_auto" value="0">
+                        <input type="checkbox" name="events_slides_auto" value="1" <?php checked( $slides_auto, true ); ?>>
                     </td>
                 </tr>
             </table>
