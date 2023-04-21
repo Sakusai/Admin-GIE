@@ -46,6 +46,11 @@ function events_register_settings() {
         'default'      => '#ffffff',
         'sanitize_callback' => 'sanitize_hex_color'
     ));
+    register_setting( 'events_options_group', 'events_font_family', array(
+        'type'         => 'string',
+        'default'      => 'Arial, sans-serif',
+        'sanitize_callback' => 'sanitize_text_field'
+    ));
 }
 
 /**
@@ -58,6 +63,7 @@ function events_render_settings_page() {
     $slides_speed = get_option('events_slides_speed', 3000);
     $slides_auto = get_option('events_slides_auto', true);
     $background_color = get_option( 'events_background_color', '#ffffff' );
+    $font_family = get_option('events_font_family', 'Arial');
     ?>
     <div class="wrap">
         <h1><strong>Réglages des événements</strong></h1>
@@ -126,6 +132,22 @@ function events_render_settings_page() {
                     <th scope="row">Couleur de fond</th>
                     <td>
                         <input type="color" name="events_background_color" value="<?php echo esc_attr( $background_color ); ?>">
+                    </td>
+                </tr>
+            </table>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Police du titre</th>
+                    <td>
+                        <select name="events_font_family">
+                            <option value="Arial" <?php selected( $font_family, 'Arial' ); ?>>Arial</option>
+                            <option value="Helvetica" <?php selected( $font_family, 'Helvetica' ); ?>>Helvetica</option>
+                            <option value="Times New Roman" <?php selected( $font_family, 'Times New Roman' ); ?>>Times New Roman</option>
+                            <option value="Georgia" <?php selected( $font_family, 'Georgia' ); ?>>Georgia</option>
+                            <option value="Verdana" <?php selected( $font_family, 'Verdana' ); ?>>Verdana</option>
+                            <option value="Garamond" <?php selected( $font_family, 'Garamond' ); ?>>Garamond</option>
+                            <option value="Trebuchet MS" <?php selected( $font_family, 'Trebuchet MS' ); ?>>Trebuchet MS</option>
+                        </select>
                     </td>
                 </tr>
             </table>

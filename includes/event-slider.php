@@ -61,6 +61,8 @@ function slider_events_shortcode() {
         }
         $slides_format = get_option( 'events_slides_format', 1 );
         $background_color = get_option( 'events_background_color', '#ffffff' );
+        $font_family = get_option('events_font_family', 'Arial');
+        $font_size = get_option('events_font_size', '16px');
         if ($slides_format == 1)
         {
         ?>
@@ -73,7 +75,7 @@ function slider_events_shortcode() {
                 <h3 class="date"><strong><?php echo $event_day; ?></strong></h3>
                 <h3 class="date"><strong><?php echo $event_month; ?></strong></h3>
             </div>
-            <h1><a href="<?php the_permalink(); ?>" class="color-a"><?php the_title();?></a></h1>
+            <h1 style="font-family:<?php echo $font_family ?>; "><a href="<?php the_permalink(); ?>" class="color-a"><?php the_title();?></a></h1>
             <h2 class="hour"><strong><?php echo str_replace(":", "h", $event_start_hour); ?></strong></h2>
             <h2 class="place"><?php echo $event_place_text;?></h2>
             <p class="read-more"><a href="<?php the_permalink(); ?>" class="color-a">Lire la suite</a></p>
