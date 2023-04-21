@@ -43,8 +43,8 @@ function events_register_settings() {
 function events_render_settings_page() {
     $slides_to_show = get_option( 'events_slides_to_show', 4 );
     $slides_format = get_option( 'events_slides_format', 1 );
-    $events_page = get_option( 'events_page_auto',false);
-?>
+    $events_page_auto = get_option( 'events_page_auto', false );
+    ?>
     <div class="wrap">
         <h1><strong>Réglages des événements</strong></h1>
         <h2>Carrousel</h2>
@@ -63,10 +63,16 @@ function events_render_settings_page() {
             <?php do_settings_sections( 'events_slides_format' ); ?>
             <table class="form-table">
                 <tr valign="top">
-                    <th scope="row">Format des sliders</th>
+                <th scope="row">Format des slides</th>
                     <td>
-                        <input type="number" name="events_slides_format" min="1" max="2" value="<?php echo esc_attr( $slides_format ); ?>">
-                        Format 1 ou 2.
+                        <label>
+                            <input type="radio" name="events_slides_format" value="1" <?php checked( $slides_format, 1 ); ?>>
+                            Format 1
+                        </label><br>
+                        <label>
+                            <input type="radio" name="events_slides_format" value="2" <?php checked( $slides_format, 2 ); ?>>
+                            Format 2
+                        </label>
                     </td>
                 </tr>
             </table>
@@ -76,7 +82,7 @@ function events_render_settings_page() {
                     <th scope="row">Créer la page d'événements par mois</th>
                     <td>
                         <input type="hidden" name="events_page_auto" value="0">
-                        <input type="checkbox" name="events_page_auto" value="1" <?php checked( $events_page, true ); ?>>
+                        <input type="checkbox" name="events_page_auto" value="1" <?php checked( $events_page_auto, true ); ?>>
                     </td>
                 </tr>
             </table>
