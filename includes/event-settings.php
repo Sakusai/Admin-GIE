@@ -79,7 +79,8 @@ function events_render_settings_page() {
         <!-- Formulaire des réglages possible -->
         <form method="post" action="options.php">
             <?php settings_fields( 'events_options_group' ); ?> <!-- Sélection de l'emplacement des réglages -->
-            <?php do_settings_sections( 'events_slides_to_show' ); ?> <!-- Selection du réglage qui permet de choisir combien de slides on affiche en même temps -->
+            <!-- Réglage qui permet de choisir combien de slides on affiche en même temps -->
+            <?php do_settings_sections( 'events_slides_to_show' ); ?> 
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Nombre de slides à afficher</th>
@@ -89,7 +90,8 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
-            <?php do_settings_sections( 'events_slides_format' ); ?> <!-- Sélection du réglage qui permet de chosir le format des slides -->
+            <!-- Réglage qui permet de chosir le format des slides -->
+            <?php do_settings_sections( 'events_slides_format' ); ?> 
             <table class="form-table">
                 <tr valign="top">
                 <th scope="row">Format des slides</th>
@@ -105,7 +107,8 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
-            <?php do_settings_sections( 'events_page_auto' ); ?> <!-- Sélection du réglage  -->
+            <!-- Réglage qui permet la création automatique d'une page qui affiche les événements par mois  -->
+            <?php do_settings_sections( 'events_page_auto' ); ?> 
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Page d'événements par mois</th>
@@ -115,6 +118,7 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
+            <!-- Réglage qui permet d'activer ou non le défilement automatique des slides -->
             <?php do_settings_sections( 'events_slides_auto' ); ?>
             <table class="form-table">
                 <tr valign="top">
@@ -125,7 +129,9 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
-            <?php do_settings_sections( 'events_slides_infinite' ); ?>
+            <!-- Réglage qui permet de choisir les slides boucles ou non / A corriger -->
+            <?php 
+            /* do_settings_sections( 'events_slides_infinite' ); 
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Slides en boucle</th>
@@ -136,6 +142,8 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
+            */ ?>
+            <!-- Réglage qui permet de choisir la vitesse de défilement des slides-->
             <?php do_settings_sections( 'events_slides_speed' ); ?>
             <table class="form-table">
                 <tr valign="top">
@@ -146,6 +154,7 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
+            <!-- Réglage qui permet de choisir la vitesse de défilement entre deux slides-->
             <?php do_settings_sections( 'events_slides_speed_pass' ); ?>
             <table class="form-table">
                 <tr valign="top">
@@ -156,6 +165,7 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
+            <!-- Réglage qui permet de choisir la couleur de fond des slides-->
             <?php do_settings_sections( 'events_background_color' ); ?>
             <table class="form-table">
                 <tr valign="top">
@@ -165,6 +175,7 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
+            <!-- Réglage qui permet de choisir la police d'écriture du titre-->
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Police du titre</th>
@@ -181,6 +192,7 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
+            <!-- Bouton de validation des régagles -->
             <?php submit_button( 'Enregistrer les réglages', 'primary', 'events_submit_button' ); ?>
         </form>
     </div>
