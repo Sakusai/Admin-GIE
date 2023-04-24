@@ -83,15 +83,15 @@ function upcoming_events_shortcode() {
     ?>
     <ul>
     <?php while ( $events->have_posts() ) {
-      $events->the_post();
-      $event_start_date = get_post_meta( get_the_ID(), 'event_start_date', true );
-      $event_start_month = date('Y-m', strtotime($event_start_date));
-      $event_end_date = get_post_meta( get_the_ID(), 'event_end_date', true );
-      if (!$event_end_date )
+      $events->the_post(); // Séléctionne puis enlève le premier événement de la liste 
+      $event_start_date = get_post_meta( get_the_ID(), 'event_start_date', true ); // Récupère la date du début
+      $event_start_month = date('Y-m', strtotime($event_start_date)); // Récupère le mois et l'année de début
+      $event_end_date = get_post_meta( get_the_ID(), 'event_end_date', true ); // Récupère la date de fin
+      if (!$event_end_date ) // si il n'y a pas de date de fin alors date de fin = date de début
       {
         $event_end_date = $event_start_date;
       }
-      $event_end_month = date('Y-m', strtotime($event_end_date));
+      $event_end_month = date('Y-m', strtotime($event_end_date)); // Récupère le mois de fin
       // $event_start_month = mois de la date du début de l'événement
       // $year_month = année et mois choisis
       if ( ($event_start_month === $year_month  && $event_end_month === $year_month ) // Commence et finit dans le mois
