@@ -9,6 +9,7 @@ add_action( 'init', 'register_event_taxonomy' );
  * Créer une catégory personalisé
  */
 function register_event_taxonomy() {
+    // Nom et texte en rapport au type créé
     $labels = array(
         'name'              => _x( 'Catégories d\'événements', 'taxonomy general name' ),
         'singular_name'     => _x( 'Catégorie d\'événement', 'taxonomy singular name' ),
@@ -22,7 +23,7 @@ function register_event_taxonomy() {
         'new_item_name'     => __( 'Nom de la nouvelle catégorie d\'événement' ),
         'menu_name'         => __( 'Catégories d\'événements' ),
     );
-
+    // Requête pour la création d'un type personalisé
     $args = array(
         'hierarchical'      => true,
         'labels'            => $labels,
@@ -32,5 +33,5 @@ function register_event_taxonomy() {
         'rewrite'           => array( 'slug' => 'event_category' ),
     );
 
-    register_taxonomy( 'event_category', 'event', $args );
+    register_taxonomy( 'event_category', 'event', $args ); // Création du type personalisé Event_category
 }

@@ -15,11 +15,13 @@ function add_event_hour_fields()
 {
     // Affichage des champs sur la page d'ajout/modification d'un événement
     ?>
+    <!-- Champ de l'heure de début -->
     <div class="misc-pub-section">
         <label for="event-start-hour">Heure de début :</label>
         <input type="time" id="event-start-hour" name="event_start_hour"
             value="<?php echo esc_attr(get_post_meta(get_the_ID(), 'event_start_hour', true)); ?>" required>
     </div>
+    <!-- Champ de l'heure de fin -->
     <div class="misc-pub-section">
         <label for="event-end-hour">Heure de fin :</label>
         <input type="time" id="event-end-hour" name="event_end_hour"

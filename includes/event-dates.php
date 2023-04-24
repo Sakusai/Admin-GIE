@@ -15,11 +15,13 @@ function add_event_date_fields()
 {
     // Affichage des champs sur la page d'ajout/modification d'un événement
     ?>
+    <!-- Champ de la date de début -->
     <div class="misc-pub-section">
         <label for="event-start-date">Date de début :</label>
         <input type="date" id="event-start-date" name="event_start_date"
             value="<?php echo esc_attr(get_post_meta(get_the_ID(), 'event_start_date', true)); ?>" required>
     </div>
+    <!-- Champ de la date de fin -->
     <div class="misc-pub-section">
         <label for="event-end-date">Date de fin :</label>
         <input type="date" id="event-end-date" name="event_end_date"

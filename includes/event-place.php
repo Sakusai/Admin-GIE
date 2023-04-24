@@ -11,6 +11,7 @@ add_action( 'init', 'register_event_place' );
  * Créer un attribut lieu personalisé
  */
 function register_event_place() {
+    // Nom et texte en rapport au type créé
     $labels = array(
         'name'              => _x( 'Lieux d\'événements', 'taxonomy general name' ),
         'singular_name'     => _x( 'Lieu d\'événement', 'taxonomy singular name' ),
@@ -25,6 +26,7 @@ function register_event_place() {
         'menu_name'         => __( 'Lieux d\'événements' ),
     );
 
+    // Requête pour la création d'un type personalisé
     $args = array(
         'hierarchical'      => true,
         'labels'            => $labels,
@@ -34,7 +36,7 @@ function register_event_place() {
         'rewrite'           => array( 'slug' => 'event_place' ),
     );
 
-    register_taxonomy( 'event_place', 'event', $args );
+    register_taxonomy( 'event_place', 'event', $args ); // Création du type personalisé Event_place
 }
 
 /**

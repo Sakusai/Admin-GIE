@@ -16,6 +16,7 @@ add_action('init', 'register_event_post_type');
  */
 function register_event_post_type()
 {
+    // Création du type personalisé Event
     register_post_type(
         'event',
         array(
@@ -49,44 +50,14 @@ function register_event_post_type()
         )
     );
 }
-
-
 /**
- * Effectue la fonction migrate_posts_to_event_type à l'initialisation de WordPress
+ * Effevtue la fonction add_back_button dans le contenu de l'événement
  */
-add_action('init', 'migrate_posts_to_event_type');
-
-/**
- * Migration des publications existantes de 'post' à 'event'
- */
-function migrate_posts_to_event_type()
-{
-    $args = array(
-        'post_type' => 'post',
-        'meta_key' => 'is_event',
-        'meta_value' => 'yes',
-        'posts_per_page' => -1,
-    );
-    $posts = new WP_Query($args);
-
-    if ($posts->have_posts()) {
-        while ($posts->have_posts()) {
-            $posts->the_post();
-
-            $post_data = array(
-                'ID' => get_the_ID(),
-                'post_type' => 'event',
-            );
-
-            wp_update_post($post_data);
-        }
-    }
-
-    wp_reset_postdata();
-}
-
 add_action('the_content', 'add_back_button');
 
+/**
+ * Ajoute un bouton de retour dans le contenu
+ */
 function add_back_button($content) {
     if (is_singular('event')) { // Vérifier que c'est une page d'événement
         $back_button = "<button onclick='javascript:history.back()'>Retour</button>"; // Créer le bouton retour
