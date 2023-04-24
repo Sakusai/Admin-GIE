@@ -6,6 +6,7 @@ require_once plugin_dir_path(__FILE__) . '../includes/event-upcoming.php';
 require_once plugin_dir_path(__FILE__) . '../includes/event-upcoming-page.php';
 require_once plugin_dir_path(__FILE__) . '../includes/event-slider.php';
 require_once plugin_dir_path(__FILE__) . '../includes/event-settings.php';
+require_once plugin_dir_path(__FILE__) . '../includes/event-map.php';
 /**
  *  Effectue la fonction register_event_post_type à l'initialisation de WordPress
  */
