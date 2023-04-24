@@ -47,6 +47,11 @@ function events_register_settings() {
         'default'      => true,
         'sanitize_callback' => 'absint'
 ));
+    register_setting( 'events_options_group', 'events_slides_dots', array(
+        'type'         => 'boolen',
+        'default'      => true,
+        'sanitize_callback' => 'absint'
+    ));
     register_setting( 'events_options_group', 'events_background_color', array(
         'type'         => 'string',
         'default'      => '#ffffff',
@@ -67,6 +72,7 @@ function events_render_settings_page() {
     $slides_format = get_option( 'events_slides_format', 1 );
     $events_page_auto = get_option( 'events_page_auto', false );
     $slides_infinite = get_option('events_slides_infinite',true);
+    $slides_dots = get_option('events_slides_dots',true);
     $slides_speed = get_option('events_slides_speed', 3000);
     $slides_speed_pass = get_option('events_slides_speed_pass', 300);
     $slides_auto = get_option('events_slides_auto', true);
@@ -129,20 +135,28 @@ function events_render_settings_page() {
                     </td>
                 </tr>
             </table>
-            <!-- Réglage qui permet de choisir les slides boucles ou non / A corriger -->
-            <?php 
-            /* do_settings_sections( 'events_slides_infinite' ); 
+            <!-- Réglage qui permet de choisir les slides boucles ou non -->
+            <?php do_settings_sections( 'events_slides_infinite' ); ?>
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Slides en boucle</th>
                     <td>
                         <input type="hidden" name="events_slides_infinite" value="0">
                         <input type="checkbox" name="events_slides_infinite" value="1" <?php checked( $slides_infinite, true ); ?>>
-                        A corriger
                     </td>
                 </tr>
             </table>
-            */ ?>
+            <!-- Réglage qui permet de choisir si les points sont affiché ou non -->
+            <?php do_settings_sections( 'events_slides_dots' ); ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Points de défilement</th>
+                    <td>
+                        <input type="hidden" name="events_slides_dots" value="0">
+                        <input type="checkbox" name="events_slides_dots" value="1" <?php checked( $slides_dots, true ); ?>>
+                    </td>
+                </tr>
+            </table>
             <!-- Réglage qui permet de choisir la vitesse de défilement des slides-->
             <?php do_settings_sections( 'events_slides_speed' ); ?>
             <table class="form-table">

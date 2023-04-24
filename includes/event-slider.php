@@ -120,6 +120,20 @@ function slider_events_shortcode() {
     $slides_speed = get_option('events_slides_speed', 3000); // Récupère la vitesse de défilement automatique choisi
     $slides_speed_pass = get_option('events_slides_speed_pass', 300); //Récupère la vitesse de défilement entre deux slides choisi
     $slides_auto = get_option('events_slides_auto'); // Récupère le choix du défilement automatique
+    $slides_infinite = get_option('events_slides_infinite',true);
+    if ($slides_infinite == 1){
+        $slides_infinite = "true";
+    }
+    else if ($slides_infinite == 0){
+        $slides_infinite = "false";
+    }
+    $slides_dots = get_option('events_slides_dots',true);
+    if ($slides_dots == 1){
+        $slides_dots = "true";
+    }
+    else if ($slides_dots == 0){
+        $slides_dots = "false";
+    }
     ?>
     </div>
     <!-- On Récupère ici tous les scripts js nécessaires pour le slider -->
@@ -129,8 +143,8 @@ function slider_events_shortcode() {
         <!-- Début du script slick (carrousel)-->
         <script type="text/javascript">
             $('.responsive').slick({
-                dots: true, //Affichage ou non des points en bas du slider
-                infinite: true, //Boucle infini ou non des slides
+                dots: <?php echo $slides_dots ?>, //Affichage ou non des points en bas du slider
+                infinite: <?php echo $slides_infinite ?>,  //Boucle infini ou non des slides
                 speed: <?php echo $slides_speed_pass ?>, //Vitesse de défilement entre deux slides
                 autoplay: <?php echo $slides_auto ?>, // Défilement automatique
                 autoplaySpeed:<?php echo $slides_speed ?>, // Vitesse du défilement automatique
