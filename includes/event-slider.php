@@ -50,10 +50,11 @@ function slider_events_shortcode() {
         $event_month = $formatter->format($event_date); // Mois de l'événement sous forme : avr. par exemple
         $event_start_hour = get_post_meta( $event_id, 'event_start_hour', true ); // Heure de début de l'événement
         $slides_to_show = get_option( 'events_slides_to_show', 4 ); // Nombre de slide à afficher
-        $content = get_the_content($event_id); // Contenu de l'événement
-        $apercu_description = strip_tags(substr($content, 0, 480/$slides_to_show)); // Contenu coupé selon le nombre de slide afficher, qui donne une petite description
+        $content = strip_tags(get_the_content($event_id)); // Contenu de l'événement
+        $apercu_description = substr($content, 0, 480/$slides_to_show); // Contenu coupé selon le nombre de slide afficher, qui donne une petite description
         $terms = get_the_terms( get_the_ID(), 'event_place' ); //Récuperation de tous les lieux
-
+        $text_color = get_option( 'events_text_color', '#ffffff' );
+        $text_hover_color = get_option( 'events_text_hover_color', '#ffffff' );
         $event_place_text = ""; // Texte vide pour afficher les lieux
         if ( $terms && ! is_wp_error( $terms ) ) // Vérifie qu'il a bien des lieux et vérifie que la requête ne provoque pas d'erreur
         {
@@ -87,10 +88,10 @@ function slider_events_shortcode() {
                 <h3 class="date"><strong><?php echo $event_day; ?></strong></h3>
                 <h3 class="date"><strong><?php echo $event_month; ?></strong></h3>
             </div>
-            <h1 style="font-family:<?php echo $font_family ?>; "><a href="<?php the_permalink(); ?>" class="color-a"><?php the_title();?></a></h1>
-            <h2 class="hour"><strong><?php echo str_replace(":", "h", $event_start_hour); ?></strong></h2>
-            <h2 class="place"><?php echo $event_place_text;?></h2>
-            <p class="read-more"><a href="<?php the_permalink(); ?>" class="color-a">Lire la suite</a></p>
+            <h1 style="font-family:<?php echo $font_family ?>; "><a href="<?php the_permalink(); ?>" class="color-a" style="color:<?php echo $text_color; ?>;"><?php the_title();?></a></h1>
+            <h2 style="color:<?php echo $text_color; ?>;" class="hour"><strong><?php echo str_replace(":", "h", $event_start_hour); ?></strong></h2>
+            <h2 style="color:<?php echo $text_color; ?>;" class="place"><?php echo $event_place_text;?></h2>
+            <p class="read-more"><a href="<?php the_permalink(); ?>" class="color-a" onmouseover="this.style.color='<?php echo $text_hover_color; ?>';" onmouseout="this.style.color='<?php echo $text_color; ?>';" style="color:<?php echo $text_color; ?>;">Lire la suite</a></p>
         </div>
 
         
@@ -100,7 +101,7 @@ function slider_events_shortcode() {
     else{
         ?>
          <!-- Affichage du slide format 2 -->
-        <div class="slider2">
+        <div class="slider2" >
             <p class="img2">
                 <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail( array( 300, 180 ) ); ?></a>
             </p>

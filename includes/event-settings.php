@@ -62,6 +62,17 @@ function events_register_settings() {
         'default'      => 'Arial, sans-serif',
         'sanitize_callback' => 'sanitize_text_field'
     ));
+    register_setting( 'events_options_group', 'events_text_color', array(
+        'type'         => 'string',
+        'default'      => '#ffffff',
+        'sanitize_callback' => 'sanitize_hex_color'
+    ));
+    register_setting( 'events_options_group', 'events_text_hover_color', array(
+        'type'         => 'string',
+        'default'      => '#ffffff',
+        'sanitize_callback' => 'sanitize_hex_color'
+    ));
+
 }
 
 /**
@@ -78,16 +89,19 @@ function events_render_settings_page() {
     $slides_auto = get_option('events_slides_auto', true);
     $background_color = get_option( 'events_background_color', '#ffffff' );
     $font_family = get_option('events_font_family', 'Arial');
+    $text_color = get_option( 'events_text_color', '#ffffff' );
+    $text_hover_color = get_option( 'events_text_hover_color', '#ffffff' );
     ?>
+     <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . 'CSS/style.css'; ?>"> <!-- Lien vers notre fichier css -->
     <div class="wrap">
         <h1><strong>Réglages des événements</strong></h1>
-        <h2>Carrousel</h2>
+        <h2>Slider</h2>
         <!-- Formulaire des réglages possible -->
         <form method="post" action="options.php">
             <?php settings_fields( 'events_options_group' ); ?> <!-- Sélection de l'emplacement des réglages -->
             <!-- Réglage qui permet de choisir combien de slides on affiche en même temps -->
             <?php do_settings_sections( 'events_slides_to_show' ); ?> 
-            <table class="form-table">
+            <table class="settings">
                 <tr valign="top">
                     <th scope="row">Nombre de slides à afficher</th>
                     <td>
@@ -95,10 +109,9 @@ function events_render_settings_page() {
                         De 3 à 6 slides affiché en même temps.
                     </td>
                 </tr>
-            </table>
             <!-- Réglage qui permet de chosir le format des slides -->
             <?php do_settings_sections( 'events_slides_format' ); ?> 
-            <table class="form-table">
+ 
                 <tr valign="top">
                 <th scope="row">Format des slides</th>
                     <td>
@@ -112,85 +125,92 @@ function events_render_settings_page() {
                         </label>
                     </td>
                 </tr>
-            </table>
             <!-- Réglage qui permet la création automatique d'une page qui affiche les événements par mois  -->
             <?php do_settings_sections( 'events_page_auto' ); ?> 
-            <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Page d'événements par mois</th>
                     <td>
                         <input type="hidden" name="events_page_auto" value="0">
                         <input type="checkbox" name="events_page_auto" value="1" <?php checked( $events_page_auto, true ); ?>>
+                        Créer une page qui affiche tous les événements du mois sélectionné.
                     </td>
                 </tr>
-            </table>
             <!-- Réglage qui permet d'activer ou non le défilement automatique des slides -->
             <?php do_settings_sections( 'events_slides_auto' ); ?>
-            <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Défilement automatique des slides</th>
                     <td>
                         <input type="hidden" name="events_slides_auto" value="0">
                         <input type="checkbox" name="events_slides_auto" value="1" <?php checked( $slides_auto, true ); ?>>
+                        Change de slide automatiquement toutes les <strong><?php echo esc_attr( $slides_speed ); ?></strong> millisecondes.
                     </td>
                 </tr>
-            </table>
             <!-- Réglage qui permet de choisir les slides boucles ou non -->
             <?php do_settings_sections( 'events_slides_infinite' ); ?>
-            <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Slides en boucle</th>
                     <td>
                         <input type="hidden" name="events_slides_infinite" value="0">
                         <input type="checkbox" name="events_slides_infinite" value="1" <?php checked( $slides_infinite, true ); ?>>
+                        Crée une boucle de slide.
                     </td>
                 </tr>
-            </table>
             <!-- Réglage qui permet de choisir si les points sont affiché ou non -->
             <?php do_settings_sections( 'events_slides_dots' ); ?>
-            <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Points de défilement</th>
                     <td>
                         <input type="hidden" name="events_slides_dots" value="0">
                         <input type="checkbox" name="events_slides_dots" value="1" <?php checked( $slides_dots, true ); ?>>
+                        Affiche les pointillés indiquant à quel slide on est.
                     </td>
                 </tr>
-            </table>
             <!-- Réglage qui permet de choisir la vitesse de défilement des slides-->
             <?php do_settings_sections( 'events_slides_speed' ); ?>
-            <table class="form-table">
                 <tr valign="top">
-                    <th scope="row">Vitesse de défilement des slides</th>
+                    <th scope="row">Durée entre chaque défilement des slides</th>
                     <td>
                         <input type="number" name="events_slides_speed" value="<?php echo esc_attr( $slides_speed ); ?>">
                         En millisecondes.
                     </td>
                 </tr>
-            </table>
             <!-- Réglage qui permet de choisir la vitesse de défilement entre deux slides-->
             <?php do_settings_sections( 'events_slides_speed_pass' ); ?>
-            <table class="form-table">
                 <tr valign="top">
-                    <th scope="row">Vitesse de passage d'une slide à une autre</th>
+                    <th scope="row">Vitesse de défilement d'une slide à une autre</th>
                     <td>
                         <input type="number" name="events_slides_speed_pass" value="<?php echo esc_attr( $slides_speed_pass ); ?>">
                         En millisecondes.
                     </td>
                 </tr>
-            </table>
             <!-- Réglage qui permet de choisir la couleur de fond des slides-->
             <?php do_settings_sections( 'events_background_color' ); ?>
-            <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Couleur de fond</th>
                     <td>
                         <input type="color" name="events_background_color" value="<?php echo esc_attr( $background_color ); ?>">
+                        Veuillez vous assurez d'avoir toujours un ratio de contraste entre le texte et le fond d'au moins 7.
                     </td>
                 </tr>
-            </table>
+            <!-- Réglage qui permet de choisir la couleur du texte-->
+            <?php do_settings_sections( 'events_text_color' ); ?>
+                <tr valign="top">
+                    <th scope="row">Couleur du texte</th>
+                    <td>
+                        <input type="color" name="events_text_color" value="<?php echo esc_attr( $text_color ); ?>">
+                        Veuillez vous assurez d'avoir toujours un ratio de contraste entre le texte et le fond d'au moins 7.
+                    </td>
+                </tr>
+            <!-- Réglage qui permet de choisir la couleur du survole de texte-->
+            <?php do_settings_sections( 'events_text_hover_color' ); ?>
+                <tr valign="top">
+                    <th scope="row">Couleur du texte</th>
+                    <td>
+                        <input type="color" name="events_text_hover_color" value="<?php echo esc_attr( $text_hover_color ); ?>">
+                        Veuillez vous assurez d'avoir toujours un ratio de contraste entre le texte et le fond d'au moins 7.
+                    </td>
+                </tr>
             <!-- Réglage qui permet de choisir la police d'écriture du titre-->
-            <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Police du titre</th>
                     <td>
