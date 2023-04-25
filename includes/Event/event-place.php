@@ -1,6 +1,6 @@
 <?php
 
-require_once plugin_dir_path(__FILE__) . '../includes/event-type.php';
+require_once plugin_dir_path(__FILE__) . '../Event/event-type.php';
 
 /**
  * Effectue la fonction register_event_place à l'initialisation de wordpress

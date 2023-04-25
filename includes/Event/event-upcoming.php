@@ -51,7 +51,7 @@ function upcoming_events_shortcode() {
   $prevmonthName = $monthNames[$prevMonth]; // Nom du mois précédent
   $nextmonthName = $monthNames[$nextMonth]; // Nom du mois prochain
   ?>
-  <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . 'CSS/style.css'; ?>">
+  <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . '../CSS/style.css'; ?>">
   <!-- Affichage des deux boutons de navigation et affichage du mois et de l'année séléctionnée -->
   <div class="month-navigation">
     <button id="prev-month" onclick="location.href='?monthYear=<?php echo $prevMonth.'-'.$prevYear; ?>'"><?php echo $prevmonthName?></button>
@@ -100,7 +100,7 @@ function upcoming_events_shortcode() {
         || ($event_start_month === $year_month  && $event_end_month > $year_month ))  // Commende dans le mois et finit après le mois
         {?>
         <li class="event-thumbnail">
-        <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . 'CSS/style.css'; ?>">
+        <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . '../CSS/style.css'; ?>">
           <!-- Si l'événement à une vignette, alors on l'affiche -->
           <?php if ( has_post_thumbnail() ) : ?>
             <a class="event-thumbnail img" href="<?php the_permalink(); ?>"><?php the_post_thumbnail( array( 300, 300 ) ); ?></a>

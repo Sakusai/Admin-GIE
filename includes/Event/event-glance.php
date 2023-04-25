@@ -1,6 +1,6 @@
 <?php
 
-require_once plugin_dir_path(__FILE__) . '../includes/event-type.php';
+require_once plugin_dir_path(__FILE__) . '../Event/event-type.php';
 
 /**
  * Appel la fonction event_custom_posttype_glance_items dans la case "D'un coup d'oeil" du tableau de bord

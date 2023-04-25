@@ -33,9 +33,9 @@ function slider_events_shortcode() {
     $events = new WP_Query( $args ); // Exécution de la requête
     ?>
 
-    <link rel="stylesheet" href="<?php echo plugins_url( 'slick/slick-theme.css', __FILE__ ); ?>"/> <!-- Lien vers le fichier theme css de slick -->
-    <link rel="stylesheet" href="<?php echo plugins_url( 'slick/slick.css', __FILE__ ); ?>"/> <!-- Lien vers le fichier css de slick -->
-    <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . 'CSS/style.css'; ?>"> <!-- Lien vers notre fichier css -->
+    <link rel="stylesheet" href="<?php echo plugins_url( '../slick/slick-theme.css', __FILE__ ); ?>"/> <!-- Lien vers le fichier theme css de slick -->
+    <link rel="stylesheet" href="<?php echo plugins_url( '../slick/slick.css', __FILE__ ); ?>"/> <!-- Lien vers le fichier css de slick -->
+    <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . '../CSS/style.css'; ?>"> <!-- Lien vers notre fichier css -->
     <div class="responsive">
     <?php
     // Boucle qui permet d'afficher les événements
@@ -88,7 +88,7 @@ function slider_events_shortcode() {
                 <h3 class="date"><strong><?php echo $event_day; ?></strong></h3>
                 <h3 class="date"><strong><?php echo $event_month; ?></strong></h3>
             </div>
-            <h1 style="font-family:<?php echo $font_family ?>; "><a href="<?php the_permalink(); ?>" class="color-a" style="color:<?php echo $text_color; ?>;"><?php the_title();?></a></h1>
+            <h1 style="font-family:<?php echo $font_family ?>; "><a href="<?php the_permalink(); ?>" class="color-a" onmouseover="this.style.color='<?php echo $text_hover_color; ?>';" onmouseout="this.style.color='<?php echo $text_color; ?>';" style="color:<?php echo $text_color; ?>;"><?php the_title();?></a></h1>
             <h2 style="color:<?php echo $text_color; ?>;" class="hour"><strong><?php echo str_replace(":", "h", $event_start_hour); ?></strong></h2>
             <h2 style="color:<?php echo $text_color; ?>;" class="place"><?php echo $event_place_text;?></h2>
             <p class="read-more"><a href="<?php the_permalink(); ?>" class="color-a" onmouseover="this.style.color='<?php echo $text_hover_color; ?>';" onmouseout="this.style.color='<?php echo $text_color; ?>';" style="color:<?php echo $text_color; ?>;">Lire la suite</a></p>
@@ -138,9 +138,9 @@ function slider_events_shortcode() {
     ?>
     </div>
     <!-- On Récupère ici tous les scripts js nécessaires pour le slider -->
-    <script type="text/javascript" src="<?php echo plugins_url( 'JS/jquery-3.6.4.min.js', __FILE__ ); ?>"></script>
-    <script type="text/javascript" src="<?php echo plugins_url( 'JS/jquery-migrate-1.4.1.min.js', __FILE__ ); ?>"></script>
-    <script type="text/javascript" src="<?php echo plugins_url( 'slick/slick.min.js', __FILE__ ); ?>"></script>
+    <script type="text/javascript" src="<?php echo plugins_url( '../JS/jquery-3.6.4.min.js', __FILE__ ); ?>"></script>
+    <script type="text/javascript" src="<?php echo plugins_url( '../JS/jquery-migrate-1.4.1.min.js', __FILE__ ); ?>"></script>
+    <script type="text/javascript" src="<?php echo plugins_url( '../slick/slick.min.js', __FILE__ ); ?>"></script>
         <!-- Début du script slick (carrousel)-->
         <script type="text/javascript">
             $('.responsive').slick({

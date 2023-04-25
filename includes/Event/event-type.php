@@ -1,14 +1,11 @@
 <?php
 
-require_once plugin_dir_path(__FILE__) . '../includes/event-type-category.php';
-require_once plugin_dir_path(__FILE__) . '../includes/event-sort-by-dates.php';
-require_once plugin_dir_path(__FILE__) . '../includes/event-upcoming.php';
-require_once plugin_dir_path(__FILE__) . '../includes/event-upcoming-page.php';
-require_once plugin_dir_path(__FILE__) . '../includes/event-slider.php';
-require_once plugin_dir_path(__FILE__) . '../includes/event-map.php';
-require_once plugin_dir_path(__FILE__) . '../includes/event-map-markers.php';
-require_once plugin_dir_path(__FILE__) . '../includes/event-map-add-markers.php';
-require_once plugin_dir_path(__FILE__) . '../includes/event-settings.php';
+require_once plugin_dir_path(__FILE__) . '../Event/event-type-category.php';
+require_once plugin_dir_path(__FILE__) . '../Event/event-sort-by-dates.php';
+require_once plugin_dir_path(__FILE__) . '../Event/event-upcoming.php';
+require_once plugin_dir_path(__FILE__) . '../Event/event-upcoming-page.php';
+require_once plugin_dir_path(__FILE__) . '../Event/event-slider.php';
+require_once plugin_dir_path(__FILE__) . '../Event/event-settings.php';
 /**
  *  Effectue la fonction register_event_post_type à l'initialisation de WordPress
  */

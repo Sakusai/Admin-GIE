@@ -92,7 +92,7 @@ function events_render_settings_page() {
     $text_color = get_option( 'events_text_color', '#ffffff' );
     $text_hover_color = get_option( 'events_text_hover_color', '#ffffff' );
     ?>
-     <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . 'CSS/style.css'; ?>"> <!-- Lien vers notre fichier css -->
+     <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . '../CSS/style.css'; ?>"> <!-- Lien vers notre fichier css -->
     <div class="wrap">
         <h1><strong>Réglages des événements</strong></h1>
         <h2>Slider</h2>
@@ -189,7 +189,7 @@ function events_render_settings_page() {
                     <th scope="row">Couleur de fond</th>
                     <td>
                         <input type="color" name="events_background_color" value="<?php echo esc_attr( $background_color ); ?>">
-                        Veuillez vous assurez d'avoir toujours un ratio de contraste entre le texte et le fond d'au moins 7.
+                        Veuillez vous assurer d'avoir toujours un ratio de contraste entre le texte et le fond d'au moins 7.
                     </td>
                 </tr>
             <!-- Réglage qui permet de choisir la couleur du texte-->
@@ -198,7 +198,7 @@ function events_render_settings_page() {
                     <th scope="row">Couleur du texte</th>
                     <td>
                         <input type="color" name="events_text_color" value="<?php echo esc_attr( $text_color ); ?>">
-                        Veuillez vous assurez d'avoir toujours un ratio de contraste entre le texte et le fond d'au moins 7.
+                        Veuillez vous assurer d'avoir toujours un ratio de contraste entre le texte et le fond d'au moins 7.
                     </td>
                 </tr>
             <!-- Réglage qui permet de choisir la couleur du survole de texte-->
@@ -207,7 +207,7 @@ function events_render_settings_page() {
                     <th scope="row">Couleur du texte</th>
                     <td>
                         <input type="color" name="events_text_hover_color" value="<?php echo esc_attr( $text_hover_color ); ?>">
-                        Veuillez vous assurez d'avoir toujours un ratio de contraste entre le texte et le fond d'au moins 7.
+                        Veuillez vous assurer d'avoir toujours un ratio de contraste entre le texte et le fond d'au moins 7.
                     </td>
                 </tr>
             <!-- Réglage qui permet de choisir la police d'écriture du titre-->

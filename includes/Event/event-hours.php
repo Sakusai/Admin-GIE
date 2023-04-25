@@ -1,6 +1,6 @@
 <?php
 
-require_once plugin_dir_path(__FILE__) . '../includes/event-type.php';
+require_once plugin_dir_path(__FILE__) . '../Event/event-type.php';
 
 /**
  * Effectue la fonction add_event_hour_fields dans la boite de publication de l'événement
