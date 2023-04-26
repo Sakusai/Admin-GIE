@@ -204,7 +204,7 @@ function events_render_settings_page() {
             <!-- Réglage qui permet de choisir la couleur du survole de texte-->
             <?php do_settings_sections( 'events_text_hover_color' ); ?>
                 <tr valign="top">
-                    <th scope="row">Couleur du texte</th>
+                    <th scope="row">Couleur du texte en survole</th>
                     <td>
                         <input type="color" name="events_text_hover_color" value="<?php echo esc_attr( $text_hover_color ); ?>">
                         Veuillez vous assurer d'avoir toujours un ratio de contraste entre le texte et le fond d'au moins 7.
