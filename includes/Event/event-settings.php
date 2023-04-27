@@ -17,6 +17,7 @@ function events_settings_page() {
         'events-settings',
         'events_render_settings_page'
     );
+    
 }
 
 /**
@@ -232,3 +233,4 @@ function events_render_settings_page() {
     </div>
 <?php
 }
+

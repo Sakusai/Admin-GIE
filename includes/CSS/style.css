@@ -218,3 +218,45 @@ h2.hour{
   line-height: 1.3;
   font-weight: 600;
 }
+.slider-cat {
+  position: relative;
+  margin: 5px;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center; /* Centre horizontalement */
+}
+
+.content-cat,
+.img-cat {
+  display: inline-block; /* Utilisation de display inline-block */
+  vertical-align: middle; /* Centre verticalement */
+}
+
+.content-cat {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+}
+
+.img-cat {
+  height: 150px;
+  width: 150px; /* Ajuster la largeur selon vos besoins */
+}
+
+.img-cat a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.img-cat img {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.slider-cat h1 {
+  margin: 0;
+}

@@ -118,6 +118,9 @@ function slider_events_shortcode() {
     <?php
     }
     }
+    ?> 
+    </div>
+    <?php
     $slides_speed = get_option('events_slides_speed', 3000); // Récupère la vitesse de défilement automatique choisi
     $slides_speed_pass = get_option('events_slides_speed_pass', 300); //Récupère la vitesse de défilement entre deux slides choisi
     $slides_auto = get_option('events_slides_auto'); // Récupère le choix du défilement automatique
@@ -136,7 +139,7 @@ function slider_events_shortcode() {
         $slides_dots = "false";
     }
     ?>
-    </div>
+    
     <!-- On Récupère ici tous les scripts js nécessaires pour le slider -->
     <script type="text/javascript" src="<?php echo plugins_url( '../JS/jquery-3.6.4.min.js', __FILE__ ); ?>"></script>
     <script type="text/javascript" src="<?php echo plugins_url( '../JS/jquery-migrate-1.4.1.min.js', __FILE__ ); ?>"></script>
