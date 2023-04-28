@@ -23,7 +23,7 @@ function shortcode_settings_page() {
 function shortcode_generate_page() {
     // Récupération de toutes les catégories
     $categories = get_categories();
-
+    echo '<h1>Générateur de shortcode pour les sliders de catégorie</h1>';
     // Création du formulaire
     $form = '<form method="post">';
     $form .= '<label for="categorie">Catégorie :</label>';
