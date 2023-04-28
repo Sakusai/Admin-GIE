@@ -10,7 +10,7 @@ add_action( 'admin_menu', 'post_settings_page' );
  */
 function post_settings_page() {
     add_submenu_page(
-        'edit.php',
+        'administration-gie',
         "Réglages du slider de catégorie d'article",
         'Réglages',
         'manage_options',
@@ -19,7 +19,6 @@ function post_settings_page() {
     );
     
 }
-
 
 /**
  * Effectue la fonction events_register_settings quand le panel admin est initialisé
@@ -49,7 +48,7 @@ function post_render_settings_page() {
     ?>
      <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . '../CSS/style.css'; ?>"> <!-- Lien vers notre fichier css -->
     <div class="wrap">
-        <h1><strong>Réglages des événements</strong></h1>
+        <h1><strong>Réglages des articles</strong></h1>
         <h2>Slider</h2>
         <!-- Formulaire des réglages possible -->
         <form method="post" action="options.php">
@@ -72,11 +71,11 @@ function post_render_settings_page() {
                     <td>
                         <label>
                             <input type="radio" name="post_slides_format" value="1" <?php checked( $slides_format, 1 ); ?>>
-                            Format 1
+                            Format 1 (Nombre de slide affiché passé à 3)
                         </label><br>
                         <label>
                             <input type="radio" name="post_slides_format" value="2" <?php checked( $slides_format, 2 ); ?>>
-                            Format 2
+                            Format 2 (Nombre de slide affiché libre)
                         </label>
                     </td>
                 </tr>
