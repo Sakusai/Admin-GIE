@@ -65,3 +65,17 @@ function add_back_button($content) {
     }
     return $content;
 }
+
+/*
+add_action( 'pre_get_posts', 'event_admin_pagination' );
+
+function event_admin_pagination( $query ) {
+    global $pagenow;
+
+    if ( is_admin() && $pagenow == 'edit.php' && $query->query_vars['post_type'] == 'event' ) {
+        $query->set( 'posts_per_page', 10 ); // Nombre d'événements par page
+        $query->set( 'orderby', 'date' ); // Tri par date de création
+        $query->set( 'order', 'DESC' ); // Tri descendant
+    }
+}
+*/

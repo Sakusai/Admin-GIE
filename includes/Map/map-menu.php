@@ -54,6 +54,29 @@ function BackOfficeMenu() {
 function BackOfficeGestion() {
     // get_admin_page_title() est une fonction qui permet de récupérer le titre définit dans le 1er argument de la fonction add_menu_page().
     echo '<h1>' . get_admin_page_title() . '</h1>';
+
+    ?>
+
+    <h2>Que fait ce plugin ?</h2>
+    <h3>
+      Ce plugin à pour but de gérer des événements, 
+      ces événements ont plusieurs fonctionnalité:
+    </h3>
+    <ul>
+      <li>- Création, modification et suppression d'événements</li>
+      <li>- Catégories customisé pour les événements, qui ne sont pas les mêmes que pour les articles</li>
+      <li>- Lieux pour les événements</li>
+      <li>- Catégories de lieux</li>
+      <li>- Création d'une page qui affiche les événements par mois (activable dans les réglages d'événements)</li>
+      <li>- Un shortcode qui crée un slider des 10 prochains événements, il se met à jour tout seul et est complétement paramétrable dans les réglages d'événements </li>
+      <li>- Un menu réglages permettant de gérer le slider d'événements et d'activer la page des événements par mois</li>
+    </ul>
+    <p>
+      Il y a aussi un shortcode permettant de créer un slider pour les catégorie d'article, ce shortcode est généré via le générateur de shortocode dans le menu Admin GIE.
+      Il a donc aussi droit à son menu de réglages
+    </p>
+    <?php
+
     echo '<h2> Les codes courts ou ShortCodes</h2>
 		 <hr>
 		 <h3>[numerosUtiles_GIE]   Les numéros utiles :   [/numerosUtiles_GIE]</h3>

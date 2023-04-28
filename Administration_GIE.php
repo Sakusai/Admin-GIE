@@ -17,5 +17,5 @@ require_once plugin_dir_path(__FILE__) . 'includes/Event/event-glance.php';
 require_once plugin_dir_path(__FILE__) . 'includes/Map/map-menu.php';
 require_once plugin_dir_path(__FILE__) . 'includes/Map/map-place.php';
 require_once plugin_dir_path(__FILE__) . 'includes/Article/article-slider.php';
-require_once plugin_dir_path(__FILE__) . 'includes/Article/article-settings.php';
 require_once plugin_dir_path(__FILE__) . 'includes/Article/article-generate-shortcode.php';
+require_once plugin_dir_path(__FILE__) . 'includes/Article/article-settings.php';
