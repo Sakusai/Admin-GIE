@@ -21,9 +21,9 @@ function register_event_post_type()
         'event',
         array(
             'labels' => array(
-                'name' => __('Événements', 'textdomain'),
-                'singular_name' => __('Événement', 'textdomain'),
-                'name_admin_bar' => __('Événements', 'textdomain'),
+                'name' => __('GIE Événements', 'textdomain'),
+                'singular_name' => __('GIE Événement', 'textdomain'),
+                'name_admin_bar' => __('GIE Événements', 'textdomain'),
 		        'parent_item_colon' => __('Parent Événements:', 'textdomain'),
                 'all_items' => __('Tous les événements', 'textdomain'),
                 'add_new_item' => __('Ajouter un événement', 'textdomain'), // Modifie le texte d'ajout d'un événement

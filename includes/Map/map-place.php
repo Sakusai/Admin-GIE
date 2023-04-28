@@ -189,7 +189,7 @@
     // add_menu_page( 'Administration', 'Admin GIE', 'manage_options', 'administration-gie', array( $this, 'BackOfficeGestion' ), 'dashicons-welcome-widgets-menus', 24 );
     // add_submenu_page() ajoute une sous-rubrique dans la colonne et précise quelle sera la méthode à exécutée pour définir l'affichage : BackOfficeAffichage()
     // ajouter null pour ne pas afficher le sous menu 
-    add_submenu_page( 'administration-gie', 'Affichage des catégories', 'Les catégories', 'manage_options', 'affichageCategories', 'BackOfficeCategories');
+    add_submenu_page( 'administration-gie', 'Affichage des catégories', 'Catégories de lieux', 'manage_options', 'affichageCategories', 'BackOfficeCategories');
     add_submenu_page( Null, 'Ajouter une catégorie de lieu', 'Ajouter une catégorie de lieu', 'manage_options', 'ajouterCat', 'BackOfficeCatAjout' );
     add_submenu_page( Null, 'Modification de la catégorie de lieu', 'Modification de la catégorie de lieu', 'manage_options', 'modificationCat','BackOfficeCatMod' );
     add_submenu_page( Null, 'Suppression de la catégorie de lieu', 'Suppression de la catégorie de lieu', 'manage_options', 'suppressionCat', 'BackOfficeCatSuppr' );
