@@ -72,9 +72,10 @@ function BackOfficeGestion() {
       <li>- Un menu réglages permettant de gérer le slider d'événements et d'activer la page des événements par mois</li>
     </ul>
     <p>
-      Il y a aussi un shortcode permettant de créer un slider pour les catégorie d'article, ce shortcode est généré via le générateur de shortocode dans le menu Admin GIE.
+      Il y a aussi un shortcode permettant de créer un slider pour les catégorie d'article, ce shortcode est généré via le générateur de shortocode dans le menu Admin GIE. <br/>
       Il a donc aussi droit à son menu de réglages
     </p>
+    <hr>
     <?php
 
     echo '<h2> Les codes courts ou ShortCodes</h2>
