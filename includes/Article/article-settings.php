@@ -70,11 +70,11 @@ function post_render_settings_page() {
                 <th scope="row">Format des slides</th>
                     <td>
                         <label>
-                            <input type="radio" name="post_slides_format" value="1" <?php checked( $slides_format, 1 ); ?>>
+                            <input type="radio" name="post_slides_format" value="1"<?php checked( $slides_format, 1 ); ?>>
                             Format 1 (Nombre de slide affiché passé à 3)
                         </label><br>
                         <label>
-                            <input type="radio" name="post_slides_format" value="2" <?php checked( $slides_format, 2 ); ?>>
+                            <input type="radio" name="post_slides_format" value="2"<?php checked( $slides_format, 2 ); ?>>
                             Format 2 (Nombre de slide affiché libre)
                         </label>
                     </td>

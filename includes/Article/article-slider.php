@@ -27,7 +27,6 @@ function slider_article_shortcode($idCat)
     <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . '../CSS/style.css'; ?>">
     <!-- Lien vers notre fichier css -->
     <div class="responsive">
-
         <?php
         $slides_to_show = get_option('post_slides_to_show', 4);
         $slides_speed = get_option('post_slides_speed', 3000);
@@ -104,7 +103,6 @@ function slider_article_shortcode($idCat)
             ]
         });
     </script>
-
     <?php
     wp_reset_postdata();
     return ob_get_clean();
