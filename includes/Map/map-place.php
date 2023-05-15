@@ -125,7 +125,7 @@
     $codecarte .= '<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>' . "\n";
     $codecarte .= '<div id="map" style="width: 100%; height: 650px; z-index: 1"></div>' . "\n";
     $codecarte .= '<script>';
-    $codecarte .= 'const map = L.map(\'map\').setView([' . $centre['lat'] . ', '. $centre['long'] .'], 14);
+    $codecarte .= 'const map = L.map(\'map\').setView([' . $centre['lat'] . ', '. $centre['long'] .'], 10);
 
 		const tiles = L.tileLayer(\'https://tile.openstreetmap.org/{z}/{x}/{y}.png\', {
 			maxZoom: 19,
