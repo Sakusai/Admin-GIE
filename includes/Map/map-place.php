@@ -81,41 +81,51 @@
     wp_reset_postdata();
     return ob_get_clean();
   }
-
-  function ShortCode_Leaflet_GIE( $atts, $content ) {
-    // Cette ligne me permet d'importer une variable global dans un espace local
+  function calculerCentreLieux($catId) {
     global $wpdb;
-    if(!empty($_GET[ 'carteidcat' ])) {
-      $idcat = $_GET[ 'carteidcat' ];
-    $rowcat = $wpdb->get_results( "SELECT annuaire_cat_id FROM {$wpdb->prefix}annuaire_categorie WHERE annuaire_parent = $idcat" );
-    if ( $wpdb->num_rows > 0 ) {
-      $long = 0;
-      $lat = 0;
-      $nbcoo = 0;
-      foreach ( $rowcat AS $valcat ) {
-        $row = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}annuaire_lieu WHERE annuaire_cat_id = $valcat->annuaire_cat_id " );
-        foreach ( $row AS $val ) {
-        $long += $val->annuaire_long;
-        $lat += $val->annuaire_lat;
-        $nbcoo +=1;
-        }
-      }
-      $long = $long/$nbcoo;
-      $lat = $lat/$nbcoo;
+
+    // Récupérer les coordonnées géographiques des lieux de la catégorie spécifiée
+    $query = $wpdb->prepare("SELECT annuaire_lat, annuaire_long FROM {$wpdb->prefix}annuaire_lieu WHERE annuaire_cat_id = %d", $catId);
+    $coordonnees = $wpdb->get_results($query);
+
+    // Initialiser les variables pour le calcul du centre
+    $totalLat = 0;
+    $totalLong = 0;
+    $nombreLieux = count($coordonnees);
+
+    // Calculer la somme des latitudes et des longitudes
+    foreach ($coordonnees as $coordonnee) {
+        $totalLat += $coordonnee->annuaire_lat;
+        $totalLong += $coordonnee->annuaire_long;
     }
-    // ?carteidcat=2
-	
-	} else {
-	  extract( shortcode_atts( array( 'idcat' => '32' ), $atts ) );
-	}
-    //$codecarte = "<p>ID catégorie $ idcat : " . $idcat . "</p>";
+
+    // Calculer la latitude et la longitude moyenne
+    $centreLat = $totalLat / $nombreLieux;
+    $centreLong = $totalLong / $nombreLieux;
+
+    // Retourner les coordonnées du centre
+    return array('lat' => $centreLat, 'long' => $centreLong);
+}
+  function ShortCode_Leaflet_GIE( $atts, $content ) {
+   // Cette ligne me permet d'importer une variable global dans un espace local
+   global $wpdb;
+
+   // ?carteidcat=2
+ if(!empty($_GET[ 'carteidcat' ])) {
+     $idcat = $_GET[ 'carteidcat' ];
+ } else {
+   extract( shortcode_atts( array( 'idcat' => '32' ), $atts ) );
+ }
+  $centre = calculerCentreLieux($idcat);
+
+    $codecarte = "<p>ID catégorie $ idcat : " . $idcat . "</p>";
 		  
     $codecarte .= "<!-- début de l'affichage de la carte 12/040/2023 16:00:47 -->" . "\n";
     $codecarte .= '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>' . "\n";
     $codecarte .= '<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>' . "\n";
     $codecarte .= '<div id="map" style="width: 100%; height: 650px; z-index: 1"></div>' . "\n";
     $codecarte .= '<script>';
-    $codecarte .= 'const map = L.map(\'map\').setView(['. $lat .',' . $long . '], 14);
+    $codecarte .= 'const map = L.map(\'map\').setView([' . $centre['lat'] . ', '. $centre['long'] .'], 14);
 
 		const tiles = L.tileLayer(\'https://tile.openstreetmap.org/{z}/{x}/{y}.png\', {
 			maxZoom: 19,
