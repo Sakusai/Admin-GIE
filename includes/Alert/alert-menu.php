@@ -197,7 +197,7 @@ function alert_page()
   </div>
   <?php
 }
-
+/*
 add_action('init', 'display_alert_banner');
 function display_alert_banner()
 {
@@ -224,6 +224,7 @@ function display_alert_banner()
         </script>';
   }
 }
+*/
 
 // Inclure la bibliothèque Font Awesome
 add_action('wp_enqueue_scripts', 'load_font_awesome');
