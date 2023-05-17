@@ -120,7 +120,10 @@ function ShortCode_Leaflet_GIE($atts, $content)
 
     $codecarte = "<!-- début de l'affichage de la carte 12/040/2023 16:00:47 -->\n";
     $codecarte .= '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />' . "\n";
+    $codecarte .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />' . "\n";
+    $codecarte .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css" />' . "\n";
     $codecarte .= '<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>' . "\n";
+    $codecarte .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>' . "\n";
     $codecarte .= '<div id="map" style="width: 100%; height: 650px; z-index: 1"></div>' . "\n";
     $codecarte .= '<script>';
     $codecarte .= 'const map = L.map(\'map\').setView([' . $centre['lat'] . ', ' . $centre['long'] . '], 9);
@@ -128,7 +131,11 @@ function ShortCode_Leaflet_GIE($atts, $content)
     const tiles = L.tileLayer(\'https://tile.openstreetmap.org/{z}/{x}/{y}.png\', {
         maxZoom: 19,
         attribution: \'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>\'
-    }).addTo(map);';
+    }).addTo(map);
+
+    const markers = L.markerClusterGroup();
+
+    map.addLayer(markers);';
 
     $rowcat = $wpdb->get_results("SELECT annuaire_cat_id FROM {$wpdb->prefix}annuaire_categorie WHERE annuaire_parent = $idcat");
     if ($wpdb->num_rows > 0) {
@@ -144,7 +151,8 @@ function ShortCode_Leaflet_GIE($atts, $content)
                 });
 
                 var popupAff = \"<!-- g1 --><a href='http://maps.google.com/maps?daddr=$val->annuaire_lat, $val->annuaire_long&ll=' target='_blank'>$val->annuaire_lieu_nom</a><br>\";
-                var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], { icon: myIcon, zIndexOffset: 0 }).addTo(map).bindPopup(popupAff);";
+                var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], { icon: myIcon }).bindPopup(popupAff);
+                markers.addLayer(marker);";
             }
         }
     } else {
@@ -159,23 +167,16 @@ function ShortCode_Leaflet_GIE($atts, $content)
             });
 
             var popupAff = \"<!-- g2 --><a href='http://maps.google.com/maps?daddr=$val->annuaire_lat, $val->annuaire_long&ll=' target='_blank'>$val->annuaire_lieu_nom</a><br>\";
-            var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], { icon: myIcon, zIndexOffset: 0 }).addTo(map).bindPopup(popupAff);";
+            var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], { icon: myIcon }).bindPopup(popupAff);
+            markers.addLayer(marker);";
         }
     }
-
-    $codecarte .= "
-    function onMarkerClick(e) {
-        latlong.innerHTML = e.latlng;
-        WL.Execute(\"marqueur\", latlong.innerHTML);
-        latlong.innerHTML = '';
-    }
-
-    map.on('click', onMarkerClick);";
 
     $codecarte .= "</script>\n<!-- fin de l'affichage de la carte -->";
 
     return $codecarte;
 }
+
 
   function uninstall() {
     global $wpdb;
