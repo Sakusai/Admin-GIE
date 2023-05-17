@@ -129,6 +129,8 @@ function ShortCode_Leaflet_GIE( $atts, $content ) {
      attribution: \'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>\'
   }).addTo(map);';
 
+  $markerClusterGroup = 'var markerClusterGroup = L.markerClusterGroup();';
+  
   $rowcat = $wpdb->get_results( "SELECT annuaire_cat_id FROM {$wpdb->prefix}annuaire_categorie WHERE annuaire_parent = $idcat" );
   if ( $wpdb->num_rows > 0 ) {
      foreach ( $rowcat as $valcat ) {
@@ -143,7 +145,8 @@ function ShortCode_Leaflet_GIE( $atts, $content ) {
            });
 
            var popupAff = \"<!-- g1 --><a href='http://maps.google.com/maps?daddr=$val->annuaire_lat, $val->annuaire_long&ll=' target='_blank'>$val->annuaire_lieu_nom</a><br>\";
-           var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], {icon: myIcon, zIndexOffset: 0}).addTo(map).bindPopup(popupAff);";
+           var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], {icon: myIcon}).bindPopup(popupAff);
+           markerClusterGroup.addLayer(marker);";
         }
      }
   } else {
@@ -158,10 +161,15 @@ function ShortCode_Leaflet_GIE( $atts, $content ) {
         });
 
         var popupAff = \"<!-- g2 --><a href='http://maps.google.com/maps?daddr=$val->annuaire_lat, $val->annuaire_long&ll=' target='_blank'>$val->annuaire_lieu_nom</a><br>\";
-        var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], {icon: myIcon, zIndexOffset: 0}).addTo(map).bindPopup(popupAff);";
+        var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], {icon: myIcon}).bindPopup(popupAff);
+        markerClusterGroup.addLayer(marker);";
      }
   }
   
+  $codecarte .= $markerClusterGroup;
+  
+  $codecarte .= "map.addLayer(markerClusterGroup);";
+
   $codecarte .= "
   function onMarkerClick(marker) {
      latlong.innerHTML = marker.latlng;
@@ -175,6 +183,7 @@ function ShortCode_Leaflet_GIE( $atts, $content ) {
 
   return $codecarte;
 }
+
 
   function uninstall() {
     global $wpdb;
