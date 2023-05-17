@@ -118,14 +118,13 @@
  }
   $centre = calculerCentreLieux($idcat);
 
-    $codecarte = "<p>ID catégorie $ idcat : " . $idcat . "</p>";
 		  
-    $codecarte .= "<!-- début de l'affichage de la carte 12/040/2023 16:00:47 -->" . "\n";
+    $codecarte = "<!-- début de l'affichage de la carte 12/040/2023 16:00:47 -->" . "\n";
     $codecarte .= '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>' . "\n";
     $codecarte .= '<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>' . "\n";
     $codecarte .= '<div id="map" style="width: 100%; height: 650px; z-index: 1"></div>' . "\n";
     $codecarte .= '<script>';
-    $codecarte .= 'const map = L.map(\'map\').setView([' . $centre['lat'] . ', '. $centre['long'] .'], 10);
+    $codecarte .= 'const map = L.map(\'map\').setView([' . $centre['lat'] . ', '. $centre['long'] .'], 8);
 
 		const tiles = L.tileLayer(\'https://tile.openstreetmap.org/{z}/{x}/{y}.png\', {
 			maxZoom: 19,
