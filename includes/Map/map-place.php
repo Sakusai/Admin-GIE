@@ -171,13 +171,13 @@ function ShortCode_Leaflet_GIE( $atts, $content ) {
   $codecarte .= "map.addLayer(markerClusterGroup);";
 
   $codecarte .= "
-  function onMarkerClick(marker) {
-     latlong.innerHTML = marker.latlng;
+  function onMarkerClick(e) {
+     latlong.innerHTML = e.latlng;
      WL.Execute(\"marqueur\", latlong.innerHTML);
      latlong.innerHTML = '';
   }
 
-  marker.on('click', onMarkerClick);";
+  markerClusterGroup.on('click', onMarkerClick);";
   
   $codecarte .= "</script>\n<!-- fin de l'affichage de la carte -->";
 
