@@ -184,7 +184,6 @@ function ShortCode_Leaflet_GIE( $atts, $content ) {
   return $codecarte;
 }
 
-
   function uninstall() {
     global $wpdb;
     // $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}contact;" );
