@@ -106,74 +106,75 @@
     // Retourner les coordonnées du centre
     return array('lat' => $centreLat, 'long' => $centreLong);
 }
-function ShortCode_Leaflet_GIE( $atts, $content ) {
-  global $wpdb;
+function ShortCode_Leaflet_GIE($atts, $content)
+{
+    global $wpdb;
 
-  if ( ! empty( $_GET['carteidcat'] ) ) {
-    $idcat = $_GET['carteidcat'];
-  } else {
-    extract( shortcode_atts( array( 'idcat' => '32' ), $atts ) );
-  }
-  
-  $centre = calculerCentreLieux( $idcat );
+    if (!empty($_GET['carteidcat'])) {
+        $idcat = $_GET['carteidcat'];
+    } else {
+        extract(shortcode_atts(array('idcat' => '32'), $atts));
+    }
 
-  $codecarte = "<!-- début de l'affichage de la carte 12/040/2023 16:00:47 -->\n";
-  $codecarte .= '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />' . "\n";
-  $codecarte .= '<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>' . "\n";
-  $codecarte .= '<div id="map" style="width: 100%; height: 650px; z-index: 1"></div>' . "\n";
-  $codecarte .= '<script>';
-  $codecarte .= 'const map = L.map(\'map\').setView([' . $centre['lat'] . ', '. $centre['long'] .'], 9);
+    $centre = calculerCentreLieux($idcat);
 
-  const tiles = L.tileLayer(\'https://tile.openstreetmap.org/{z}/{x}/{y}.png\', {
-     maxZoom: 19,
-     attribution: \'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>\'
-  }).addTo(map);';
+    $codecarte = "<!-- début de l'affichage de la carte 12/040/2023 16:00:47 -->\n";
+    $codecarte .= '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />' . "\n";
+    $codecarte .= '<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>' . "\n";
+    $codecarte .= '<div id="map" style="width: 100%; height: 650px; z-index: 1"></div>' . "\n";
+    $codecarte .= '<script>';
+    $codecarte .= 'const map = L.map(\'map\').setView([' . $centre['lat'] . ', ' . $centre['long'] . '], 9);
 
-  $rowcat = $wpdb->get_results( "SELECT annuaire_cat_id FROM {$wpdb->prefix}annuaire_categorie WHERE annuaire_parent = $idcat" );
-  if ( $wpdb->num_rows > 0 ) {
-     foreach ( $rowcat as $valcat ) {
-        $row = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}annuaire_lieu WHERE annuaire_cat_id = $valcat->annuaire_cat_id " );
-        foreach ( $row as $val ) {
-           $codecarte .= "
-           var myIcon = L.icon({
-              iconUrl: '$val->annuaire_icone',
-              iconSize: [50, 50],
-              iconAnchor: [25, 50],
-              popupAnchor: [-3, -76],
-           });
+    const tiles = L.tileLayer(\'https://tile.openstreetmap.org/{z}/{x}/{y}.png\', {
+        maxZoom: 19,
+        attribution: \'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>\'
+    }).addTo(map);';
 
-           var popupAff = \"<!-- g1 --><a href='http://maps.google.com/maps?daddr=$val->annuaire_lat, $val->annuaire_long&ll=' target='_blank'>$val->annuaire_lieu_nom</a><br>\";
-           var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], {icon: myIcon, zIndexOffset: 0}).addTo(map).bindPopup(popupAff);";
+    $rowcat = $wpdb->get_results("SELECT annuaire_cat_id FROM {$wpdb->prefix}annuaire_categorie WHERE annuaire_parent = $idcat");
+    if ($wpdb->num_rows > 0) {
+        foreach ($rowcat as $valcat) {
+            $row = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}annuaire_lieu WHERE annuaire_cat_id = $valcat->annuaire_cat_id ");
+            foreach ($row as $val) {
+                $codecarte .= "
+                var myIcon = L.icon({
+                    iconUrl: '$val->annuaire_icone',
+                    iconSize: [50, 50],
+                    iconAnchor: [25, 50],
+                    popupAnchor: [-3, -76],
+                });
+
+                var popupAff = \"<!-- g1 --><a href='http://maps.google.com/maps?daddr=$val->annuaire_lat, $val->annuaire_long&ll=' target='_blank'>$val->annuaire_lieu_nom</a><br>\";
+                var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], { icon: myIcon, zIndexOffset: 0 }).addTo(map).bindPopup(popupAff);";
+            }
         }
-     }
-  } else {
-     $row = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}annuaire_lieu WHERE annuaire_cat_id = $idcat" );
-     foreach ( $row as $val ) {
-        $codecarte .= "
-        var myIcon = L.icon({
-           iconUrl: '$val->annuaire_icone',
-           iconSize: [50, 50],
-           iconAnchor: [25, 50],
-           popupAnchor: [-3, -76],
-        });
+    } else {
+        $row = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}annuaire_lieu WHERE annuaire_cat_id = $idcat");
+        foreach ($row as $val) {
+            $codecarte .= "
+            var myIcon = L.icon({
+                iconUrl: '$val->annuaire_icone',
+                iconSize: [50, 50],
+                iconAnchor: [25, 50],
+                popupAnchor: [-3, -76],
+            });
 
-        var popupAff = \"<!-- g2 --><a href='http://maps.google.com/maps?daddr=$val->annuaire_lat, $val->annuaire_long&ll=' target='_blank'>$val->annuaire_lieu_nom</a><br>\";
-        var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], {icon: myIcon, zIndexOffset: 0}).addTo(map).bindPopup(popupAff);";
-     }
-  }
-  
-  $codecarte .= "
-  function onMarkerClick(marker) {
-     latlong.innerHTML = marker.latlng;
-     WL.Execute(\"marqueur\", latlong.innerHTML);
-     latlong.innerHTML = '';
-  }
+            var popupAff = \"<!-- g2 --><a href='http://maps.google.com/maps?daddr=$val->annuaire_lat, $val->annuaire_long&ll=' target='_blank'>$val->annuaire_lieu_nom</a><br>\";
+            var marker = L.marker([$val->annuaire_lat, $val->annuaire_long], { icon: myIcon, zIndexOffset: 0 }).addTo(map).bindPopup(popupAff);";
+        }
+    }
 
-  marker.on('click', onMarkerClick);";
-  
-  $codecarte .= "</script>\n<!-- fin de l'affichage de la carte -->";
+    $codecarte .= "
+    function onMarkerClick(e) {
+        latlong.innerHTML = e.latlng;
+        WL.Execute(\"marqueur\", latlong.innerHTML);
+        latlong.innerHTML = '';
+    }
 
-  return $codecarte;
+    map.on('click', onMarkerClick);";
+
+    $codecarte .= "</script>\n<!-- fin de l'affichage de la carte -->";
+
+    return $codecarte;
 }
 
   function uninstall() {
