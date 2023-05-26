@@ -332,54 +332,79 @@ function deactivate_alert()
     <?php
     exit;
 }
+function display_alert_banner() {
+    global $wpdb;
 
+    // Récupérer les alertes actives
+    $active_alerts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}gie_alertes WHERE alert_display = 1 ORDER BY alert_id DESC");
 
-function display_alert_banner()
-{
-    $alert_text = get_option('alert_text');
+    // Vérifier s'il y a des alertes actives
+    if (count($active_alerts) > 0) {
+        echo '<div class="alert-wrapper">';
+        
+        foreach ($active_alerts as $alert) {
+            // Construire les styles CSS personnalisés
+            $styles = 'background-color: ' . esc_attr($alert->alert_background_color) . '; color: ' . esc_attr($alert->alert_text_color) . '; font-size: ' . esc_attr($alert->alert_text_size) . 'px;';
 
-    // Vérifiez si un texte d'alerte est disponible
-    if ($alert_text) {
-        // Affichez le bandeau d'alerte
-        echo '<div id="alert-banner" class="alert-banner">';
-        echo '<span class="alert-text">' . esc_html($alert_text) . '</span>';
-        echo '<span class="alert-close" onclick="closeAlert()">&#10006;</span>';
+            // Construire le code HTML du bandeau d'alerte avec les styles personnalisés
+            echo '<div class="alert-banner" style="' . $styles . '">';
+            echo '<span class="alert-icon">' . esc_attr($alert->alert_icon) . '</span>';
+            echo '<span class="alert-message"><a href="' . esc_attr($alert->alert_link) . '">' . esc_html($alert->alert_text) . '</a></span>';
+            echo '<span class="close-button" onclick="closeAlert(this)">&#10006;</span>';
+            echo '</div>';
+        }
+        
         echo '</div>';
     }
 }
-
-
-
+add_action('wp_body_open', 'display_alert_banner');
 add_action('admin_post_activate_alert', 'activate_alert');
 add_action('admin_post_deactivate_alert', 'deactivate_alert');
 add_action('admin_post_nopriv_activate_alert', 'activate_alert');
 add_action('admin_post_nopriv_deactivate_alert', 'deactivate_alert');
-
 add_action('wp_enqueue_scripts', 'enqueue_alert_scripts');
 
-function enqueue_alert_scripts()
-{
+
+function enqueue_alert_scripts() {
     // Intégration directe du JavaScript
     echo '<script type="text/javascript">
-        function closeAlert() {
-            document.getElementById("alert-banner").style.display = "none";
+        function closeAlert(element) {
+            element.parentNode.style.display = "none";
         }
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            var alertBanners = document.querySelectorAll(".alert-banner");
+            
+            for (var i = 0; i < alertBanners.length; i++) {
+                alertBanners[i].style.display = "block";
+            }
+        });
     </script>';
 
     // Intégration directe du CSS
     echo '<style type="text/css">
         .alert-banner {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #ff0000;
-            color: #ffffff;
             padding: 10px;
             text-align: center;
+            z-index: 99999; /* Valeur z-index plus élevée */
         }
 
-        .alert-close {
+        .alert-icon {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .alert-message {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .close-button {
             position: absolute;
             top: 5px;
             right: 5px;
