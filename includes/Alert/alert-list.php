@@ -33,6 +33,24 @@ function afficher_sous_menu_alertes()
         'gie_alertes_edit_callback',
         'gie_alertes_edit_callback'
     );
+
+    add_submenu_page(
+        null,
+        'Activer une alerte',
+        'Activer une alerte',
+        'edit_posts',
+        'activate_alert',
+        'activate_alert'
+    );
+
+    add_submenu_page(
+        null,
+        'Désactiver une alerte',
+        'Désactiver une alerte',
+        'edit_posts',
+        'deactivate_alert',
+        'deactivate_alert'
+    );
 }
 
 
@@ -44,7 +62,9 @@ function gie_alertes_list_callback()
 
     ?>
     <div class="wrap">
-        <h1>Toutes les alertes</h1>
+        <h1 class="wp-heading-inline">Toutes les alertes</h1>
+        <a href="admin.php?page=ajouterAlerte" class="page-title-action">Ajouter</a>
+        <hr class="wp-header-end">
         <table class="widefat fixed">
             <thead>
                 <tr>
@@ -95,12 +115,23 @@ function gie_alertes_list_callback()
                             <?php echo $alert->alert_link_blank ? 'Oui' : 'Non'; ?>
                         </td>
                         <td>
-                            <a
-                                href="<?php echo admin_url('admin.php?page=gie_alertes_edit_callback&id=' . $alert->alert_id); ?>">Modifier</a>
-                            |
-                            <a
-                                href="<?php echo admin_url('admin.php?page=gie_alertes_delete_callback&id=' . $alert->alert_id); ?>">Supprimer</a>
+                            <a href="<?php echo admin_url('admin.php?page=gie_alertes_edit_callback&id=' . $alert->alert_id); ?>">Modifier</a>
+                            <br>
+                            <a href="<?php echo admin_url('admin.php?page=gie_alertes_delete_callback&id=' . $alert->alert_id); ?>">Supprimer</a>
+                            <br>
+                            <?php if($alert->alert_display){
+                                ?>
+                                <a href="<?php echo admin_url('admin.php?page=deactivate_alert&id='. $alert->alert_id ); ?>">Désactiver </a>
+                                <?php
+                            } else {
+                                ?>
+                                <a href="<?php echo admin_url('admin.php?page=activate_alert&id='. $alert->alert_id ); ?>">Activer </a>
+                                <?php
+                            }
+                            ?>
+                            
                         </td>
+
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -108,6 +139,7 @@ function gie_alertes_list_callback()
     </div>
     <?php
 }
+
 // Page de suppression d'une alerte
 function gie_alertes_delete_callback()
 {
@@ -124,7 +156,7 @@ function gie_alertes_delete_callback()
         // Ajouter un script JavaScript pour rediriger après un court délai
         ?>
         <script>
-            setTimeout(function() {
+            setTimeout(function () {
                 window.location.href = '<?php echo admin_url('admin.php?page=gie_alertes_list'); ?>';
             }, 2000); // Rediriger après 2 secondes (vous pouvez ajuster le délai selon vos besoins)
         </script>
@@ -180,7 +212,7 @@ function gie_alertes_edit_callback()
             // Ajouter un script JavaScript pour rediriger après un court délai
             ?>
             <script>
-                setTimeout(function() {
+                setTimeout(function () {
                     window.location.href = '<?php echo admin_url('admin.php?page=gie_alertes_list'); ?>';
                 }, 2000); // Rediriger après 2 secondes (vous pouvez ajuster le délai selon vos besoins)
             </script>
@@ -239,4 +271,119 @@ function gie_alertes_edit_callback()
         </div>
         <?php
     }
+}
+function activate_alert()
+{
+    // Récupère l'ID de l'alerte depuis l'URL
+    $alert_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+
+    global $wpdb;
+
+    // Met à jour la valeur de alert_display en base de données
+    $table_name = $wpdb->prefix . 'gie_alertes';
+    $wpdb->update(
+        $table_name,
+        array('alert_display' => 1),
+        array('alert_id' => $alert_id)
+    );
+
+    // Affiche un message de confirmation
+    echo 'Alerte activée avec succès.';
+
+    // Redirige l'utilisateur vers la page précédente après l'activation de l'alerte
+    ?>
+    <script>
+        setTimeout(function () {
+            window.location.href = '<?php echo admin_url('admin.php?page=gie_alertes_list'); ?>';
+        }, 2000); // Redirige après 2 secondes (vous pouvez ajuster le délai selon vos besoins)
+    </script>
+    <?php
+    exit;
+}
+
+
+
+
+function deactivate_alert()
+{
+        // Récupère l'ID de l'alerte depuis l'URL
+        $alert_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+    global $wpdb;
+
+    // Met à jour la valeur de alert_display en base de données
+    $table_name = $wpdb->prefix . 'gie_alertes';
+    $wpdb->update(
+        $table_name,
+        array('alert_display' => 0),
+        array('alert_id' => $alert_id)
+    );
+
+    // Affiche un message de confirmation
+    echo 'Alerte désactivée avec succès.';
+
+    // Redirige l'utilisateur vers la page précédente après l'activation de l'alerte
+    ?>
+    <script>
+        setTimeout(function () {
+            window.location.href = '<?php echo admin_url('admin.php?page=gie_alertes_list'); ?>';
+        }, 2000); // Redirige après 2 secondes (vous pouvez ajuster le délai selon vos besoins)
+    </script>
+    <?php
+    exit;
+}
+
+
+function display_alert_banner()
+{
+    $alert_text = get_option('alert_text');
+
+    // Vérifiez si un texte d'alerte est disponible
+    if ($alert_text) {
+        // Affichez le bandeau d'alerte
+        echo '<div id="alert-banner" class="alert-banner">';
+        echo '<span class="alert-text">' . esc_html($alert_text) . '</span>';
+        echo '<span class="alert-close" onclick="closeAlert()">&#10006;</span>';
+        echo '</div>';
+    }
+}
+
+
+
+add_action('admin_post_activate_alert', 'activate_alert');
+add_action('admin_post_deactivate_alert', 'deactivate_alert');
+add_action('admin_post_nopriv_activate_alert', 'activate_alert');
+add_action('admin_post_nopriv_deactivate_alert', 'deactivate_alert');
+
+add_action('wp_enqueue_scripts', 'enqueue_alert_scripts');
+
+function enqueue_alert_scripts()
+{
+    // Intégration directe du JavaScript
+    echo '<script type="text/javascript">
+        function closeAlert() {
+            document.getElementById("alert-banner").style.display = "none";
+        }
+    </script>';
+
+    // Intégration directe du CSS
+    echo '<style type="text/css">
+        .alert-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ff0000;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .alert-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+        }
+    </style>';
 }

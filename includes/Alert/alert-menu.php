@@ -22,7 +22,8 @@ function alerte_bd()
     `alert_date_end` date NOT NULL,
     `alert_link_type` varchar(50) NOT NULL,
     `alert_link` varchar(200) NOT NULL,
-    `alert_link_blank` boolean NOT NULL
+    `alert_link_blank` boolean NOT NULL,
+    `alert_display` boolean NOT NULL DEFAULT FALSE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;");
 }
 
@@ -37,11 +38,11 @@ add_action('admin_menu', 'alert_menu_page');
 function alert_menu_page()
 {
   add_submenu_page(
-    'administration-gie',
+    null,
     "Menu des alertes",
     'Ajoute alerte',
     'manage_options',
-    'alert-menu',
+    'ajouterAlerte',
     'alert_page'
   );
 
@@ -64,6 +65,7 @@ function alert_page()
     $alert_link_type = $_POST['alert_link_type'];
     $alert_link = $_POST['alert_link'];
     $alert_link_blank = isset($_POST['alert_link_blank']);
+    $alert_display = isset($_POST['alert_display']);
 
     // Préparer la requête SQL d'insertion
     $insert_data = array(
@@ -77,6 +79,7 @@ function alert_page()
       'alert_link_type' => $alert_link_type,
       'alert_link' => $alert_link,
       'alert_link_blank' => $alert_link_blank,
+      'alert_display' => $alert_display,
     );
     $insert_format = array(
       '%s',
@@ -89,12 +92,27 @@ function alert_page()
       '%s',
       '%s',
       '%d',
+      '%d',
     );
     $wpdb->insert("{$wpdb->prefix}gie_alertes", $insert_data, $insert_format);
     if ($wpdb->last_error) {
       echo "Erreur lors de l'insertion de l'alerte : " . $wpdb->last_error;
+      ?>
+      <script>
+        setTimeout(function () {
+          window.location.href = '<?php echo admin_url('admin.php?page=gie_alertes_list'); ?>';
+        }, 2000); // Rediriger après 2 secondes (vous pouvez ajuster le délai selon vos besoins)
+      </script>
+      <?php
     } else {
-      echo  $alert_link;
+      ?>
+      <script>
+        setTimeout(function () {
+          window.location.href = '<?php echo admin_url('admin.php?page=gie_alertes_list'); ?>';
+        }, 2000); // Rediriger après 2 secondes (vous pouvez ajuster le délai selon vos besoins)
+      </script>
+      <?php
+      echo $alert_link;
       echo "Alerte ajoutée avec succès !";
     }
   }
@@ -191,40 +209,15 @@ function alert_page()
       <label for="alert_link_blank">Ouvrir le lien dans un nouvel onglet :</label>
       <input type="checkbox" name="alert_link_blank" id="alert_link_blank">
       <br>
-
+      <label for="alert_display">Activer l'alerte</label>
+      <input type="checkbox" name="alert_display" id="alert_display">
+      <br>
       <input type="submit" name="submit" value="Ajouter">
     </form>
   </div>
   <?php
 }
-/*
-add_action('init', 'display_alert_banner');
-function display_alert_banner()
-{
-  // Vérifie si le cookie n'a pas été défini
-  if (!isset($_COOKIE['alert_displayed'])) {
-    // Définit un cookie pour indiquer que l'alerte a été affichée
-    setcookie('alert_displayed', 'true', time() + 3600, COOKIEPATH, COOKIE_DOMAIN);
-  } else if (!is_admin()) {
-    // Affiche l'alerte sur la page
-    echo '<div class="alert-banner" style="background-color:' . esc_attr(get_option('alert_background_color', '#ff0000')) . ';font-size:' . esc_attr(get_option('alert_text_size', '14')) . "px" . '; color:' . esc_attr(get_option('alert_text_color', '#ffffff')) . '"><span class="alert-icon">' . esc_attr(get_option('alert_icon', '🚨')) . '</span><span class="alert-message"><a href="' . esc_attr(get_option('alert_link')) . '" style="color:' . esc_attr(get_option('alert_text_color', '#ffffff')) . '">' . esc_html(get_option('alert_text', 'Alerte!')) . '</a></span><span class="close-button">×</span></div>';
-    echo '<style>.alert-banner .close-button {float: right;font-size: 1.5em;}</style>';
-    // Ajoute le script pour fermer le bandeau d'alerte
-    echo '<script>
-          // Sélectionne la croix de fermeture de l\'alerte
-          var closeButton = document.querySelector(\'.close-button\');
-    
-          // Ajoute un gestionnaire d\'événements pour le clic sur la croix
-          closeButton.addEventListener(\'click\', function() {
-            // Sélectionne le bandeau d\'alerte
-            var alertBanner = document.querySelector(\'.alert-banner\');
-            // Masque le bandeau d\'alerte
-            alertBanner.style.display = \'none\';
-          });
-        </script>';
-  }
-}
-*/
+
 
 // Inclure la bibliothèque Font Awesome
 add_action('wp_enqueue_scripts', 'load_font_awesome');
