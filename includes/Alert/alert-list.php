@@ -179,7 +179,7 @@ function gie_alertes_edit_callback()
 
         // Vérifier si le formulaire de modification a été soumis
         if (isset($_POST['update_alert'])) {
-            $alert_text = $_POST['alert_text'];
+            $alert_text = stripslashes($_POST['alert_text']);
             $alert_text_size = $_POST['alert_text_size'];
             $alert_background_color = $_POST['alert_background_color'];
             $alert_text_color = $_POST['alert_text_color'];
@@ -231,7 +231,7 @@ function gie_alertes_edit_callback()
             <h1>Modifier l'alerte</h1>
             <form method="post" action="">
                 <label for="alert_text">Texte de l'alerte :</label>
-                <input type="text" name="alert_text" id="alert_text" value="<?php echo $alert->alert_text; ?>" required><br>
+                <input type="text" name="alert_text" id="alert_text" value="<?php echo $alert->alert_text; ?>" required style="width: 700px; height: 10px;"><br>
 
                 <label for="alert_text_size">Taille du texte :</label>
                 <input type="number" name="alert_text_size" id="alert_text_size" value="<?php echo $alert->alert_text_size; ?>"
@@ -383,15 +383,23 @@ function enqueue_alert_scripts() {
 
     // Intégration directe du CSS
     echo '<style type="text/css">
-        .alert-banner {
-            display: none;
+        .alert-wrapper {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 99999; /* Valeur z-index plus élevée */
+        }
+        
+        .alert-banner {
+            display: none;
+            width: 100%;
             padding: 10px;
             text-align: center;
-            z-index: 99999; /* Valeur z-index plus élevée */
+            position: relative;
         }
 
         .alert-icon {
@@ -412,3 +420,4 @@ function enqueue_alert_scripts() {
         }
     </style>';
 }
+

@@ -55,7 +55,7 @@ function alert_page()
   global $wpdb;
 
   if (isset($_POST['submit'])) {
-    $alert_text = $_POST['alert_text'];
+    $alert_text = stripslashes($_POST['alert_text']);
     $alert_text_size = $_POST['alert_text_size'];
     $alert_background_color = $_POST['alert_background_color'];
     $alert_text_color = $_POST['alert_text_color'];
@@ -122,7 +122,7 @@ function alert_page()
     <h2> Personnaliser l'alerte </h2>
     <form method="post">
       <label for="alert_text">Texte de l'alerte :</label>
-      <input type="text" name="alert_text" id="alert_text" required>
+      <input type="text" name="alert_text" id="alert_text" required style="width: 700px; height: 10px;">
       <br>
 
       <label for="alert_text_size">Taille du texte :</label>
