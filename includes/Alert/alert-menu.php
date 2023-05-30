@@ -59,7 +59,7 @@ function alert_page()
     $alert_text_size = $_POST['alert_text_size'];
     $alert_background_color = $_POST['alert_background_color'];
     $alert_text_color = $_POST['alert_text_color'];
-    $alert_icon = $_POST['alert_icon'];
+    //$alert_icon = $_POST['alert_icon'];
     $alert_date_start = $_POST['alert_date_start'];
     $alert_date_end = $_POST['alert_date_end'];
     $alert_link_type = $_POST['alert_link_type'];
@@ -73,7 +73,7 @@ function alert_page()
       'alert_text_size' => $alert_text_size,
       'alert_background_color' => $alert_background_color,
       'alert_text_color' => $alert_text_color,
-      'alert_icon' => $alert_icon,
+      //'alert_icon' => $alert_icon,
       'alert_date_start' => $alert_date_start,
       'alert_date_end' => $alert_date_end,
       'alert_link_type' => $alert_link_type,
@@ -136,10 +136,11 @@ function alert_page()
       <label for="alert_text_color">Couleur du texte :</label>
       <input type="color" name="alert_text_color" id="alert_text_color" value="#FFFFFF" required>
       <br>
-
+      <?php /*
       <label for="alert_icon">Icône :</label>
       <input type="text" name="alert_icon" id="alert_icon" required>
       <br>
+      */ ?>
 
       <label for="alert_date_start">Date de début :</label>
       <input type="date" name="alert_date_start" id="alert_date_start" required>
@@ -206,7 +207,7 @@ function alert_page()
       </select>
       <br>
 
-      <label for="alert_link_blank">Ouvrir le lien dans un nouvel onglet :</label>
+      <label for="alert_link_blank">Ouvrir le lien dans une nouvelle fenêtre </label>
       <input type="checkbox" name="alert_link_blank" id="alert_link_blank">
       <br>
       <label for="alert_display">Activer l'alerte</label>

@@ -65,14 +65,14 @@ function gie_alertes_list_callback()
         <h1 class="wp-heading-inline">Toutes les alertes</h1>
         <a href="admin.php?page=ajouterAlerte" class="page-title-action">Ajouter</a>
         <hr class="wp-header-end">
-        <table class="widefat fixed">
+        <table class="wp-list-table widefat fixed striped table-view-excerpt posts">
             <thead>
                 <tr>
                     <th>Texte</th>
                     <th>Taille du texte</th>
                     <th>Couleur de fond</th>
                     <th>Couleur du texte</th>
-                    <th>Icône</th>
+                    <?php //<th>Icône</th> ?>
                     <th>Date de début</th>
                     <th>Date de fin</th>
                     <th>Type de lien</th>
@@ -96,9 +96,13 @@ function gie_alertes_list_callback()
                         <td>
                             <?php echo $alert->alert_text_color; ?>
                         </td>
+                        <?php
+                        /*
                         <td>
                             <?php echo $alert->alert_icon; ?>
                         </td>
+                        */
+                        ?>
                         <td>
                             <?php echo $alert->alert_date_start; ?>
                         </td>
@@ -238,16 +242,18 @@ function gie_alertes_edit_callback()
                     required><br>
 
                 <label for="alert_background_color">Couleur de fond :</label>
-                <input type="text" name="alert_background_color" id="alert_background_color"
+                <input type="color" name="alert_background_color" id="alert_background_color"
                     value="<?php echo $alert->alert_background_color; ?>" required><br>
 
                 <label for="alert_text_color">Couleur du texte :</label>
-                <input type="text" name="alert_text_color" id="alert_text_color" value="<?php echo $alert->alert_text_color; ?>"
+                <input type="color" name="alert_text_color" id="alert_text_color" value="<?php echo $alert->alert_text_color; ?>"
                     required><br>
-
+                <?php
+                /*
                 <label for="alert_icon">Icône :</label>
                 <input type="text" name="alert_icon" id="alert_icon" value="<?php echo $alert->alert_icon; ?>" required><br>
-
+                */
+                ?>
                 <label for="alert_date_start">Date de début :</label>
                 <input type="date" name="alert_date_start" id="alert_date_start" value="<?php echo $alert->alert_date_start; ?>"
                     required><br>
@@ -263,7 +269,7 @@ function gie_alertes_edit_callback()
                 <label for="alert_link">Lien :</label>
                 <input type="text" name="alert_link" id="alert_link" value="<?php echo $alert->alert_link; ?>" required><br>
 
-                <label for="alert_link_blank">Ouvrir dans une nouvelle fenêtre :</label>
+                <label for="alert_link_blank">Ouvrir le lien dans une nouvelle fenêtre </label>
                 <input type="checkbox" name="alert_link_blank" id="alert_link_blank" <?php echo $alert->alert_link_blank ? 'checked' : ''; ?>><br>
 
                 <input type="submit" name="update_alert" value="Enregistrer les modifications">
@@ -418,6 +424,9 @@ function enqueue_alert_scripts() {
             right: 5px;
             cursor: pointer;
         }
+        
+        body {
+            margin-top: 100px; /* Ajoutez une marge en haut pour laisser de la place aux alertes */
+        }
     </style>';
 }
-
