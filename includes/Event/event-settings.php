@@ -96,13 +96,23 @@ function events_render_settings_page() {
      <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . '../CSS/style.css'; ?>"> <!-- Lien vers notre fichier css -->
     <div class="wrap">
         <h1><strong>Réglages des événements</strong></h1>
-        <h2>Slider</h2>
+        <h2>Evénement</h2>
         <!-- Formulaire des réglages possible -->
         <form method="post" action="options.php">
             <?php settings_fields( 'events_options_group' ); ?> <!-- Sélection de l'emplacement des réglages -->
+            <table class="settings">
+            <!-- Réglage qui permet la création automatique d'une page qui affiche les événements par mois  -->
+            <?php do_settings_sections( 'events_page_auto' ); ?> 
+                <tr valign="top">
+                    <th scope="row">Page d'événements par mois</th>
+                    <td>
+                        <input type="hidden" name="events_page_auto" value="0">
+                        <input type="checkbox" name="events_page_auto" value="1" <?php checked( $events_page_auto, true ); ?>>
+                        Créer une page qui affiche tous les événements du mois sélectionné.
+                    </td>
+                </tr>
             <!-- Réglage qui permet de choisir combien de slides on affiche en même temps -->
             <?php do_settings_sections( 'events_slides_to_show' ); ?> 
-            <table class="settings">
                 <tr valign="top">
                     <th scope="row">Nombre de slides à afficher</th>
                     <td>
@@ -110,9 +120,9 @@ function events_render_settings_page() {
                         De 3 à 6 slides affiché en même temps.
                     </td>
                 </tr>
+            
             <!-- Réglage qui permet de chosir le format des slides -->
             <?php do_settings_sections( 'events_slides_format' ); ?> 
- 
                 <tr valign="top">
                 <th scope="row">Format des slides</th>
                     <td>
@@ -124,16 +134,6 @@ function events_render_settings_page() {
                             <input type="radio" name="events_slides_format" value="2" <?php checked( $slides_format, 2 ); ?>>
                             Format 2
                         </label>
-                    </td>
-                </tr>
-            <!-- Réglage qui permet la création automatique d'une page qui affiche les événements par mois  -->
-            <?php do_settings_sections( 'events_page_auto' ); ?> 
-                <tr valign="top">
-                    <th scope="row">Page d'événements par mois</th>
-                    <td>
-                        <input type="hidden" name="events_page_auto" value="0">
-                        <input type="checkbox" name="events_page_auto" value="1" <?php checked( $events_page_auto, true ); ?>>
-                        Créer une page qui affiche tous les événements du mois sélectionné.
                     </td>
                 </tr>
             <!-- Réglage qui permet d'activer ou non le défilement automatique des slides -->
