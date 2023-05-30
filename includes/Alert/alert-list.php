@@ -341,13 +341,16 @@ function deactivate_alert()
 function display_alert_banner() {
     global $wpdb;
 
-    // Récupérer les alertes actives
-    $active_alerts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}gie_alertes WHERE alert_display = 1 ORDER BY alert_id DESC");
+    // Récupérer la date actuelle
+    $current_date = date('Y-m-d');
+
+    // Récupérer les alertes actives dont la date de début est antérieure ou égale à la date actuelle et la date de fin est postérieure ou égale à la date actuelle
+    $active_alerts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}gie_alertes WHERE alert_display = 1 AND alert_date_start <= '$current_date' AND alert_date_end >= '$current_date' ORDER BY alert_id DESC");
 
     // Vérifier s'il y a des alertes actives
     if (count($active_alerts) > 0) {
         echo '<div class="alert-wrapper">';
-        
+
         foreach ($active_alerts as $alert) {
             // Construire les styles CSS personnalisés
             $styles = 'background-color: ' . esc_attr($alert->alert_background_color) . '; color: ' . esc_attr($alert->alert_text_color) . '; font-size: ' . esc_attr($alert->alert_text_size) . 'px;';
@@ -359,17 +362,17 @@ function display_alert_banner() {
             echo '<span class="close-button" onclick="closeAlert(this)">&#10006;</span>';
             echo '</div>';
         }
-        
+
         echo '</div>';
     }
 }
+
 add_action('wp_body_open', 'display_alert_banner');
 add_action('admin_post_activate_alert', 'activate_alert');
 add_action('admin_post_deactivate_alert', 'deactivate_alert');
 add_action('admin_post_nopriv_activate_alert', 'activate_alert');
 add_action('admin_post_nopriv_deactivate_alert', 'deactivate_alert');
 add_action('wp_enqueue_scripts', 'enqueue_alert_scripts');
-
 
 function enqueue_alert_scripts() {
     // Intégration directe du JavaScript
