@@ -689,7 +689,7 @@ function BackOfficeCategories()
 
   // Champ de recherche
   echo '<form method="GET" action="admin.php">';
-  echo '<input type="hidden" name="page" value="BackOfficeCategories">';
+  echo '<input type="hidden" name="page" value="affichageCategories">';
   echo '<p class="search-box">';
   echo '  <label class="screen-reader-text" for="cat-search-input">Rechercher une catégorie :</label>';
   echo '  <input type="search" id="cat-search-input" name="search" placeholder="Rechercher">';
