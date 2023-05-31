@@ -190,35 +190,45 @@ function ShortCode_Leaflet_GIE($atts, $content)
     // add_menu_page( 'Administration', 'Admin GIE', 'manage_options', 'administration-gie', array( $this, 'BackOfficeGestion' ), 'dashicons-welcome-widgets-menus', 24 );
     // add_submenu_page() ajoute une sous-rubrique dans la colonne et précise quelle sera la méthode à exécutée pour définir l'affichage : BackOfficeAffichage()
     // ajouter null pour ne pas afficher le sous menu 
+     add_submenu_page( 'administration-gie', 'Affichage des lieux', 'Les lieux', 'manage_options', 'affichageLieux', 'BackOfficeLieux' );
+    add_submenu_page( Null, 'Ajouter un lieu', 'Ajouter un lieu', 'manage_options', 'ajouterLieu',  'BackOfficeLieuAjout'  );
+    add_submenu_page( Null, 'Modification du lieu', 'Modification du lieu', 'manage_options', 'modificationLieu',  'BackOfficeLieuMod'  );
+    add_submenu_page( Null, 'Suppression du lieu', 'Suppression du lieu', 'manage_options', 'suppressionLieu',  'BackOfficeLieuSuppr'  );
     add_submenu_page( 'administration-gie', 'Affichage des catégories', 'Catégories de lieux', 'manage_options', 'affichageCategories', 'BackOfficeCategories');
     add_submenu_page( Null, 'Ajouter une catégorie de lieu', 'Ajouter une catégorie de lieu', 'manage_options', 'ajouterCat', 'BackOfficeCatAjout' );
     add_submenu_page( Null, 'Modification de la catégorie de lieu', 'Modification de la catégorie de lieu', 'manage_options', 'modificationCat','BackOfficeCatMod' );
     add_submenu_page( Null, 'Suppression de la catégorie de lieu', 'Suppression de la catégorie de lieu', 'manage_options', 'suppressionCat', 'BackOfficeCatSuppr' );
-    add_submenu_page( 'administration-gie', 'Affichage des lieux', 'Les lieux', 'manage_options', 'affichageLieux', 'BackOfficeLieux' );
-    add_submenu_page( Null, 'Ajouter un lieu', 'Ajouter un lieu', 'manage_options', 'ajouterLieu',  'BackOfficeLieuAjout'  );
-    add_submenu_page( Null, 'Modification du lieu', 'Modification du lieu', 'manage_options', 'modificationLieu',  'BackOfficeLieuMod'  );
-    add_submenu_page( Null, 'Suppression du lieu', 'Suppression du lieu', 'manage_options', 'suppressionLieu',  'BackOfficeLieuSuppr'  );
   }
 
   function BackOfficeLieux() {
-    // Cette ligne me permet d'importer une variable global dans un espace local et plus généralement $wpdb me permettra de formuler des requêtes SQL.
     global $wpdb;
     echo '<div class="wrap">';
-    // get_admin_page_title() est une fonction qui permet de récupérer le titre définit dans le 1er argument de la fonction add_menu_page().
     echo '  <h1 class="wp-heading-inline">' . get_admin_page_title() . '</h1>';
     echo '  <a href="admin.php?page=ajouterLieu" class="page-title-action">Ajouter</a>';
     echo '  <hr class="wp-header-end">';
 
-    // $wpdb->get_results nous permet de formuler une requête SQL de selection.
-    $row = $wpdb->get_results( "SELECT
-  {$wpdb->prefix}annuaire_lieu.annuaire_cat_id,
-  {$wpdb->prefix}annuaire_categorie.annuaire_cat_nom,
-  annuaire_ordre, annuaire_lieu_id, annuaire_lieu_nom, annuaire_lat, annuaire_long, annuaire_adresse, annuaire_codepostal, annuaire_ville
-  FROM {$wpdb->prefix}annuaire_lieu 
-  LEFT JOIN {$wpdb->prefix}annuaire_categorie
-  ON {$wpdb->prefix}annuaire_categorie.annuaire_cat_id = {$wpdb->prefix}annuaire_lieu.annuaire_cat_id" );
+    // Pagination
+    $per_page = 20; // Nombre de lieux par page
+    $current_page = isset($_GET['paged']) ? max(1, absint($_GET['paged'])) : 1;
+    $offset = ($current_page - 1) * $per_page;
 
-    // Les lignes suivantes nous permettent de définir un affichage sous forme de tableau
+    $row_count = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}annuaire_lieu");
+
+    $total_pages = ceil($row_count / $per_page);
+
+    $row = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT {$wpdb->prefix}annuaire_lieu.annuaire_cat_id, {$wpdb->prefix}annuaire_categorie.annuaire_cat_nom, annuaire_ordre, annuaire_lieu_id, annuaire_lieu_nom, annuaire_lat, annuaire_long, annuaire_adresse, annuaire_codepostal, annuaire_ville 
+            FROM {$wpdb->prefix}annuaire_lieu 
+            LEFT JOIN {$wpdb->prefix}annuaire_categorie 
+            ON {$wpdb->prefix}annuaire_categorie.annuaire_cat_id = {$wpdb->prefix}annuaire_lieu.annuaire_cat_id 
+            LIMIT %d, %d",
+            $offset,
+            $per_page
+        )
+    );
+
+    // Affichage du tableau
     echo '  <table class="wp-list-table widefat fixed striped table-view-excerpt posts">
   			<thead>';
     $tableheadfoot = '
@@ -234,28 +244,54 @@ function ShortCode_Leaflet_GIE($atts, $content)
     echo $tableheadfoot;
     echo '    </thead>';
     echo '    <tbody id="the-list">';
-    // La boucle FOREACH et son contenu permettent de parcourrir et d'afficher toutes les informations.
-    // Chaque ligne de résultat est représentée par $row
-    foreach ( $row AS $valeur ) {
-      echo '<tr>';
-      echo '<td>' . $valeur->annuaire_lieu_id . '</td>';
-      echo '<td>' . $valeur->annuaire_cat_id . ' ' . $valeur->annuaire_cat_nom . '</td>';
-      echo '<td>' . $valeur->annuaire_ordre . '</td>';
-      echo '<td>' . $valeur->annuaire_lieu_nom . '</td>';
-      echo '<td>' . $valeur->annuaire_lat . ' , ' . $valeur->annuaire_long . '</td>';
-      echo '<td>' . $valeur->annuaire_adresse . ' ' . $valeur->annuaire_codepostal . ' ' . $valeur->annuaire_ville . '</td>';
-      echo '<td><a href="admin.php?page=modificationLieu&nuid=' . $valeur->annuaire_lieu_id . '">Modifier</a></td>';
-      echo '<td><a href="admin.php?page=suppressionLieu&nuid=' . $valeur->annuaire_lieu_id . '">Supprimer</a></td>';
-      echo '<td><!--Dupliquer--></td>';
-      echo '</tr>';
+    foreach ($row as $valeur) {
+        echo '<tr>';
+        echo '<td>' . $valeur->annuaire_lieu_id . '</td>';
+        echo '<td>' . $valeur->annuaire_cat_id . ' ' . $valeur->annuaire_cat_nom . '</td>';
+        echo '<td>' . $valeur->annuaire_ordre . '</td>';
+        echo '<td>' . $valeur->annuaire_lieu_nom . '</td>';
+        echo '<td>' . $valeur->annuaire_lat . ' , ' . $valeur->annuaire_long . '</td>';
+        echo '<td>' . $valeur->annuaire_adresse . ' ' . $valeur->annuaire_codepostal . ' ' . $valeur->annuaire_ville . '</td>';
+        echo '<td><a href="admin.php?page=modificationLieu&nuid=' . $valeur->annuaire_lieu_id . '">Modifier</a></td>';
+        echo '<td><a href="admin.php?page=suppressionLieu&nuid=' . $valeur->annuaire_lieu_id . '">Supprimer</a></td>';
+        echo '<td><!--Dupliquer--></td>';
+        echo '</tr>';
     }
     echo '    </tbody>';
     echo '    <tfoot>';
     echo $tableheadfoot;
     echo '    </tfoot>';
     echo '  </table>';
+
+    // Affichage de la pagination
+    if ($total_pages > 1) {
+        echo '<div class="tablenav">';
+        echo '  <div class="tablenav-pages">';
+        echo '    <span class="displaying-num">' . sprintf(
+            _n(
+                '1 élément',
+                '%s éléments',
+                $row_count,
+                'text-domain'
+            ),
+            number_format_i18n($row_count)
+        ) . '</span>';
+
+        echo paginate_links(array(
+            'base' => add_query_arg('paged', '%#%'),
+            'format' => '',
+            'prev_text' => __('&laquo; Précédent', 'text-domain'),
+            'next_text' => __('Suivant &raquo;', 'text-domain'),
+            'total' => $total_pages,
+            'current' => $current_page,
+        ));
+
+        echo '  </div>';
+        echo '</div>';
+    }
+
     echo '</div>';
-  }
+}
 
   function BackOfficeLieuAjout() {
 
