@@ -49,7 +49,20 @@ function shortcode_generate_page() {
                     break;
                 }
             }
-            echo 'Shortcode à copier-coller : [slider_article idCat=' . $categorie_id . ']' . $categorie_name . '[/slider_article]';
+            $shortcode = '[slider_article idCat=' . $categorie_id . ']' . $categorie_name . '[/slider_article]';
+            
+            echo '<textarea id="generatedText" rows="5" readonly>' . $shortcode . '</textarea>';
+            echo '<button id="copyButton" onclick="copyText()">Copier</button>';
+            echo '<script>
+                function copyText() {
+                    var generatedText = document.getElementById("generatedText");
+                    generatedText.select();
+                    document.execCommand("copy");
+                    alert("Le shortcode a été copié !");
+                }
+            </script>';
         }
     }
 }
+
+
