@@ -203,15 +203,30 @@ function ShortCode_Leaflet_GIE($atts, $content)
   function BackOfficeLieux() {
     global $wpdb;
     echo '<div class="wrap">';
-    echo '  <h1 class="wp-heading-inline">' . get_admin_page_title() . '</h1>';
-    echo '  <a href="admin.php?page=ajouterLieu" class="page-title-action">Ajouter</a>';
-    echo '  <hr class="wp-header-end">';
+    echo '<h1 class="wp-heading-inline">' . get_admin_page_title() . '</h1>';
+    echo '<a href="admin.php?page=ajouterLieu" class="page-title-action">Ajouter</a>';
+    echo '<hr class="wp-header-end">';
 
     // Champ de recherche
     echo '<form method="GET" action="admin.php">';
     echo '<input type="hidden" name="page" value="affichageLieux">';
-    echo '<input type="text" name="search" placeholder="Rechercher">';
-    echo '<input type="submit" value="Rechercher">';
+    echo '<label for="search" class="screen-reader-text">Rechercher</label>';
+    echo '<input type="text" name="search" id="search" class="wp-filter-search" placeholder="Rechercher">';
+    echo '<input type="submit" value="Rechercher" class="button">';
+    echo '</form>';
+
+    // Champ de filtre
+    $categories = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}annuaire_categorie");
+    echo '<form method="GET" action="admin.php">';
+    echo '<input type="hidden" name="page" value="affichageLieux">';
+    echo '<label for="category-filter" class="screen-reader-text">Filtrer par catégorie</label>';
+    echo '<select name="category" id="category-filter" class="wp-filter-select">';
+    echo '<option value="">Toutes les catégories</option>';
+    foreach ($categories as $category) {
+        echo '<option value="' . $category->annuaire_cat_id . '">' . $category->annuaire_cat_nom . '</option>';
+    }
+    echo '</select>';
+    echo '<input type="submit" value="Filtrer" class="button">';
     echo '</form>';
 
     // Pagination
@@ -222,64 +237,102 @@ function ShortCode_Leaflet_GIE($atts, $content)
     // Requête de recherche
     $search_query = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
 
+    // Requête de filtre par catégorie
+    $category_filter = isset($_GET['category']) ? sanitize_text_field($_GET['category']) : '';
+
+    $query_args = array(
+        'search_query' => $search_query,
+        'category_filter' => $category_filter,
+        'offset' => $offset,
+        'per_page' => $per_page,
+    );
+
     $query = $wpdb->prepare(
         "SELECT {$wpdb->prefix}annuaire_lieu.annuaire_cat_id, {$wpdb->prefix}annuaire_categorie.annuaire_cat_nom, annuaire_ordre, annuaire_lieu_id, annuaire_lieu_nom, annuaire_lat, annuaire_long, annuaire_adresse, annuaire_codepostal, annuaire_ville 
         FROM {$wpdb->prefix}annuaire_lieu 
         LEFT JOIN {$wpdb->prefix}annuaire_categorie 
         ON {$wpdb->prefix}annuaire_categorie.annuaire_cat_id = {$wpdb->prefix}annuaire_lieu.annuaire_cat_id 
-        WHERE annuaire_lieu_nom LIKE %s
-        LIMIT %d, %d",
-        '%' . $wpdb->esc_like($search_query) . '%',
-        $offset,
-        $per_page
+        WHERE annuaire_lieu_nom LIKE %s",
+        '%' . $wpdb->esc_like($query_args['search_query']) . '%'
     );
 
-    $row_count = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}annuaire_lieu WHERE annuaire_lieu_nom LIKE '%{$search_query}%'");
+    if (!empty($query_args['category_filter'])) {
+        $query .= $wpdb->prepare(
+            " AND {$wpdb->prefix}annuaire_lieu.annuaire_cat_id = %d",
+            $query_args['category_filter']
+        );
+    }
+
+    $query .= $wpdb->prepare(
+        " LIMIT %d, %d",
+        $query_args['offset'],
+        $query_args['per_page']
+    );
+
+    $row_count_query = $wpdb->prepare(
+        "SELECT COUNT(*) FROM {$wpdb->prefix}annuaire_lieu WHERE annuaire_lieu_nom LIKE %s",
+        '%' . $wpdb->esc_like($query_args['search_query']) . '%'
+    );
+
+    if (!empty($query_args['category_filter'])) {
+        $row_count_query .= $wpdb->prepare(
+            " AND annuaire_cat_id = %d",
+            $query_args['category_filter']
+        );
+    }
+
+    $row_count = $wpdb->get_var($row_count_query);
 
     $total_pages = ceil($row_count / $per_page);
 
-    $row = $wpdb->get_results($query);
+    $rows = $wpdb->get_results($query);
 
     // Affichage du tableau
-    echo '  <table class="wp-list-table widefat fixed striped table-view-excerpt posts">
-  			<thead>';
-    $tableheadfoot = '
-  		  <tr>
-			  <th id="ID" class="manage-column column-title column-primary sortable desc"><a><span>ID</span></a></th>
-			  <th id="Categorie" class="manage-column column-title column-primary sortable desc" width="25%"><a><span>Catégorie</span></a></th>
-			  <th id="Numeros_ordre" class="manage-column column-title column-primary sortable desc"><a><span>Numéros d\'ordre</span></a></th>
-			  <th id="Nom" class="manage-column column-title column-primary sortable desc"><a><span>Nom</span></a></th>
-			  <th id="Coordonnees" class="manage-column column-title column-primary sortable desc"><a><span>Coordonnées</span></a></th>
-			  <th id="Adresse" class="manage-column column-title column-primary sortable desc"><a><span>Adresse</span></a></th>
-			  <th colspan="3">&nbsp;</th>
-		  </tr>';
-    echo $tableheadfoot;
-    echo '    </thead>';
-    echo '    <tbody id="the-list">';
-    foreach ($row as $valeur) {
+    echo '<table class="wp-list-table widefat fixed striped table-view-excerpt posts">';
+    echo '<thead>';
+    echo '<tr>';
+    echo '<th id="ID" class="manage-column column-title column-primary sortable desc"><a><span>ID</span></a></th>';
+    echo '<th id="Categorie" class="manage-column column-title column-primary sortable desc" width="25%"><a><span>Catégorie</span></a></th>';
+    echo '<th id="Numeros_ordre" class="manage-column column-title column-primary sortable desc"><a><span>Numéros d\'ordre</span></a></th>';
+    echo '<th id="Nom" class="manage-column column-title column-primary sortable desc"><a><span>Nom</span></a></th>';
+    echo '<th id="Coordonnees" class="manage-column column-title column-primary sortable desc"><a><span>Coordonnées</span></a></th>';
+    echo '<th id="Adresse" class="manage-column column-title column-primary sortable desc"><a><span>Adresse</span></a></th>';
+    echo '<th colspan="3">&nbsp;</th>';
+    echo '</tr>';
+    echo '</thead>';
+    echo '<tbody id="the-list">';
+    foreach ($rows as $row) {
         echo '<tr>';
-        echo '<td>' . $valeur->annuaire_lieu_id . '</td>';
-        echo '<td>' . $valeur->annuaire_cat_id . ' ' . $valeur->annuaire_cat_nom . '</td>';
-        echo '<td>' . $valeur->annuaire_ordre . '</td>';
-        echo '<td>' . $valeur->annuaire_lieu_nom . '</td>';
-        echo '<td>' . $valeur->annuaire_lat . ' , ' . $valeur->annuaire_long . '</td>';
-        echo '<td>' . $valeur->annuaire_adresse . ' ' . $valeur->annuaire_codepostal . ' ' . $valeur->annuaire_ville . '</td>';
-        echo '<td><a href="admin.php?page=modificationLieu&nuid=' . $valeur->annuaire_lieu_id . '">Modifier</a></td>';
-        echo '<td><a href="admin.php?page=suppressionLieu&nuid=' . $valeur->annuaire_lieu_id . '">Supprimer</a></td>';
+        echo '<td>' . $row->annuaire_lieu_id . '</td>';
+        echo '<td>' . $row->annuaire_cat_id . ' ' . $row->annuaire_cat_nom . '</td>';
+        echo '<td>' . $row->annuaire_ordre . '</td>';
+        echo '<td>' . $row->annuaire_lieu_nom . '</td>';
+        echo '<td>' . $row->annuaire_lat . ' , ' . $row->annuaire_long . '</td>';
+        echo '<td>' . $row->annuaire_adresse . ' ' . $row->annuaire_codepostal . ' ' . $row->annuaire_ville . '</td>';
+        echo '<td><a href="admin.php?page=modificationLieu&nuid=' . $row->annuaire_lieu_id . '">Modifier</a></td>';
+        echo '<td><a href="admin.php?page=suppressionLieu&nuid=' . $row->annuaire_lieu_id . '">Supprimer</a></td>';
         echo '<td><!--Dupliquer--></td>';
         echo '</tr>';
     }
-    echo '    </tbody>';
-    echo '    <tfoot>';
-    echo $tableheadfoot;
-    echo '    </tfoot>';
-    echo '  </table>';
+    echo '</tbody>';
+    echo '<tfoot>';
+    echo '<tr>';
+    echo '<th id="ID" class="manage-column column-title column-primary sortable desc"><a><span>ID</span></a></th>';
+    echo '<th id="Categorie" class="manage-column column-title column-primary sortable desc" width="25%"><a><span>Catégorie</span></a></th>';
+    echo '<th id="Numeros_ordre" class="manage-column column-title column-primary sortable desc"><a><span>Numéros d\'ordre</span></a></th>';
+    echo '<th id="Nom" class="manage-column column-title column-primary sortable desc"><a><span>Nom</span></a></th>';
+    echo '<th id="Coordonnees" class="manage-column column-title column-primary sortable desc"><a><span>Coordonnées</span></a></th>';
+    echo '<th id="Adresse" class="manage-column column-title column-primary sortable desc"><a><span>Adresse</span></a></th>';
+    echo '<th colspan="3">&nbsp;</th>';
+    echo '</tr>';
+    echo '</tfoot>';
+    echo '</table>';
 
     // Affichage de la pagination
     if ($total_pages > 1) {
         echo '<div class="tablenav">';
-        echo '  <div class="tablenav-pages">';
-        echo '    <span class="displaying-num">' . sprintf(
+        echo '<div class="tablenav-pages">';
+        echo '<span class="displaying-num">' . sprintf(
             _n(
                 '1 élément',
                 '%s éléments',
@@ -298,12 +351,13 @@ function ShortCode_Leaflet_GIE($atts, $content)
             'current' => $current_page,
         ));
 
-        echo '  </div>';
+        echo '</div>';
         echo '</div>';
     }
 
     echo '</div>';
 }
+
   function BackOfficeLieuAjout() {
 
     //annuaire_lieu_id	Primaire	int(10)			UNSIGNED				Non	Aucun(e)	AUTO_INCREMENT	
@@ -610,38 +664,93 @@ function ShortCode_Leaflet_GIE($atts, $content)
       }
 
       function BackOfficeCategories() {
-        // Cette ligne me permet d'importer une variable global dans un espace local et plus généralement $wpdb me permettra de formuler des requêtes SQL.
         global $wpdb;
         echo '<div class="wrap">';
         echo '  <h1 class="wp-heading-inline">' . get_admin_page_title() . '</h1>';
         echo '  <a href="admin.php?page=ajouterCat" class="page-title-action">Ajouter</a>';
         echo '  <hr class="wp-header-end">';
-        // get_admin_page_title() est une fonction qui permet de récupérer le 1er argument de la fonction add_submenu_page
-        echo get_admin_page_title();
     
-        // $wpdb->get_results nous permet de formuler une requête SQL de selection.
-        $row = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}annuaire_categorie" ); // var_dump($row);
+        // Champ de recherche
+        echo '<form method="GET" action="admin.php">';
+        echo '<input type="hidden" name="page" value="affichageCategories">';
+        echo '<input type="text" name="search" placeholder="Rechercher">';
+        echo '<input type="submit" value="Rechercher">';
+        echo '</form>';
     
-        // Les lignes suivantes nous permettent de définir un affichage sous forme de tableau
+        // Pagination
+        $per_page = 20; // Nombre de catégories par page
+        $current_page = isset($_GET['paged']) ? max(1, absint($_GET['paged'])) : 1;
+        $offset = ($current_page - 1) * $per_page;
+    
+        // Requête de recherche
+        $search_query = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
+    
+        $query = $wpdb->prepare(
+            "SELECT * FROM {$wpdb->prefix}annuaire_categorie 
+            WHERE annuaire_cat_nom LIKE %s 
+            ORDER BY annuaire_cat_id ASC
+            LIMIT %d, %d",
+            '%' . $wpdb->esc_like($search_query) . '%',
+            $offset,
+            $per_page
+        );
+    
+        $row_count = $wpdb->get_var(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}annuaire_categorie 
+            WHERE annuaire_cat_nom LIKE '%{$search_query}%'"
+        );
+    
+        $total_pages = ceil($row_count / $per_page);
+    
+        $row = $wpdb->get_results($query);
+    
+        // Affichage du tableau
         echo '<table class="wp-list-table widefat fixed striped table-view-excerpt posts">';
         echo '<tr><th>ID</th><th>Nom</th><th>Parent</th><th>Numéro d\'ordre</th><th>Validation</th><th> </th></tr>';
-    
-        // La boucle FOREACH et son contenu permettent de parcourrir et d'afficher toutes les informations.
-        // Chaque ligne de résultat est représentée par $row
-        foreach ( $row AS $valeur ) {
-          echo '<tr>';
-          echo '<td>' . $valeur->annuaire_cat_id . '</td>';
-          echo '<td>' . $valeur->annuaire_cat_nom . '</td>';
-          echo '<td>' . $valeur->annuaire_parent . '</td>';
-          echo '<td>' . $valeur->annuaire_cat_ordre . '</td>';
-          echo '<td>' . $valeur->annuaire_cat_valid . '</td>';
-          echo '<td><a href="admin.php?page=modificationCat&nuid=' . $valeur->annuaire_cat_id . '">Modifier</a></td>';
-          echo '<td><a href="admin.php?page=suppressionCat&nuid=' . $valeur->annuaire_cat_id . '&actionCat=SupprCat">Supprimer</a></td>';
-          echo '</tr>';
+        foreach ($row as $valeur) {
+            echo '<tr>';
+            echo '<td>' . $valeur->annuaire_cat_id . '</td>';
+            echo '<td>' . $valeur->annuaire_cat_nom . '</td>';
+            echo '<td>' . $valeur->annuaire_parent . '</td>';
+            echo '<td>' . $valeur->annuaire_cat_ordre . '</td>';
+            echo '<td>' . $valeur->annuaire_cat_valid . '</td>';
+            echo '<td><a href="admin.php?page=modificationCat&nuid=' . $valeur->annuaire_cat_id . '">Modifier</a></td>';
+            echo '<td><a href="admin.php?page=suppressionCat&nuid=' . $valeur->annuaire_cat_id . '&actionCat=SupprCat">Supprimer</a></td>';
+            echo '</tr>';
         }
         echo '</table>';
+    
+        // Affichage de la pagination
+        if ($total_pages > 1) {
+            echo '<div class="tablenav">';
+            echo '  <div class="tablenav-pages">';
+            echo '    <span class="displaying-num">' . sprintf(
+                _n(
+                    '1 élément',
+                    '%s éléments',
+                    $row_count,
+                    'text-domain'
+                ),
+                number_format_i18n($row_count)
+            ) . '</span>';
+    
+            echo paginate_links(array(
+                'base' => add_query_arg('paged', '%#%'),
+                'format' => '',
+                'prev_text' => __('&laquo; Précédent', 'text-domain'),
+                'next_text' => __('Suivant &raquo;', 'text-domain'),
+                'total' => $total_pages,
+                'current' => $current_page,
+            ));
+    
+            echo '  </div>';
+            echo '</div>';
+        }
+    
         echo '</div>';
-      }
+    }
+    
+    
 function BackOfficeCatAjout() {
     //annuaire_cat_id					int			UNSIGNED				Non	Aucun(e)	 AUTO_INCREMENT	
     //annuaire_cat_nom					varchar(50)     utf8mb3_general_ci						Non	Aucun(e)	
