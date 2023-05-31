@@ -207,26 +207,38 @@ function ShortCode_Leaflet_GIE($atts, $content)
     echo '  <a href="admin.php?page=ajouterLieu" class="page-title-action">Ajouter</a>';
     echo '  <hr class="wp-header-end">';
 
+    // Champ de recherche
+    echo '<form method="GET" action="admin.php">';
+    echo '<input type="hidden" name="page" value="affichageLieux">';
+    echo '<input type="text" name="search" placeholder="Rechercher">';
+    echo '<input type="submit" value="Rechercher">';
+    echo '</form>';
+
     // Pagination
     $per_page = 20; // Nombre de lieux par page
     $current_page = isset($_GET['paged']) ? max(1, absint($_GET['paged'])) : 1;
     $offset = ($current_page - 1) * $per_page;
 
-    $row_count = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}annuaire_lieu");
+    // Requête de recherche
+    $search_query = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
+
+    $query = $wpdb->prepare(
+        "SELECT {$wpdb->prefix}annuaire_lieu.annuaire_cat_id, {$wpdb->prefix}annuaire_categorie.annuaire_cat_nom, annuaire_ordre, annuaire_lieu_id, annuaire_lieu_nom, annuaire_lat, annuaire_long, annuaire_adresse, annuaire_codepostal, annuaire_ville 
+        FROM {$wpdb->prefix}annuaire_lieu 
+        LEFT JOIN {$wpdb->prefix}annuaire_categorie 
+        ON {$wpdb->prefix}annuaire_categorie.annuaire_cat_id = {$wpdb->prefix}annuaire_lieu.annuaire_cat_id 
+        WHERE annuaire_lieu_nom LIKE %s
+        LIMIT %d, %d",
+        '%' . $wpdb->esc_like($search_query) . '%',
+        $offset,
+        $per_page
+    );
+
+    $row_count = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}annuaire_lieu WHERE annuaire_lieu_nom LIKE '%{$search_query}%'");
 
     $total_pages = ceil($row_count / $per_page);
 
-    $row = $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT {$wpdb->prefix}annuaire_lieu.annuaire_cat_id, {$wpdb->prefix}annuaire_categorie.annuaire_cat_nom, annuaire_ordre, annuaire_lieu_id, annuaire_lieu_nom, annuaire_lat, annuaire_long, annuaire_adresse, annuaire_codepostal, annuaire_ville 
-            FROM {$wpdb->prefix}annuaire_lieu 
-            LEFT JOIN {$wpdb->prefix}annuaire_categorie 
-            ON {$wpdb->prefix}annuaire_categorie.annuaire_cat_id = {$wpdb->prefix}annuaire_lieu.annuaire_cat_id 
-            LIMIT %d, %d",
-            $offset,
-            $per_page
-        )
-    );
+    $row = $wpdb->get_results($query);
 
     // Affichage du tableau
     echo '  <table class="wp-list-table widefat fixed striped table-view-excerpt posts">
@@ -292,7 +304,6 @@ function ShortCode_Leaflet_GIE($atts, $content)
 
     echo '</div>';
 }
-
   function BackOfficeLieuAjout() {
 
     //annuaire_lieu_id	Primaire	int(10)			UNSIGNED				Non	Aucun(e)	AUTO_INCREMENT	
