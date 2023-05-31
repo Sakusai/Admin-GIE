@@ -300,13 +300,13 @@ function BackOfficeLieux()
   echo '<table class="wp-list-table widefat fixed striped table-view-excerpt posts">';
   echo '<thead>';
   echo '<tr>';
-  echo '<th id="ID" class="manage-column column-title column-primary sortable desc"><a><span>ID</span></a></th>';
-  echo '<th id="Categorie" class="manage-column column-title column-primary sortable desc" width="25%"><a><span>Catégorie</span></a></th>';
+  echo '<th id="ID" class="manage-column column-title column-primary sortable desc" width="7%"><a><span>ID</span></a></th>';
+  echo '<th id="Categorie" class="manage-column column-title column-primary sortable desc"><a><span>Catégorie</span></a></th>';
   echo '<th id="Numeros_ordre" class="manage-column column-title column-primary sortable desc"><a><span>Numéros d\'ordre</span></a></th>';
   echo '<th id="Nom" class="manage-column column-title column-primary sortable desc"><a><span>Nom</span></a></th>';
   echo '<th id="Coordonnees" class="manage-column column-title column-primary sortable desc"><a><span>Coordonnées</span></a></th>';
   echo '<th id="Adresse" class="manage-column column-title column-primary sortable desc"><a><span>Adresse</span></a></th>';
-  echo '<th colspan="3">&nbsp;</th>';
+  echo '<th colspan="2">&nbsp;</th>';
   echo '</tr>';
   echo '</thead>';
   echo '<tbody id="the-list">';
@@ -320,7 +320,6 @@ function BackOfficeLieux()
     echo '<td>' . $row->annuaire_adresse . ' ' . $row->annuaire_codepostal . ' ' . $row->annuaire_ville . '</td>';
     echo '<td><a href="admin.php?page=modificationLieu&nuid=' . $row->annuaire_lieu_id . '">Modifier</a></td>';
     echo '<td><a href="admin.php?page=suppressionLieu&nuid=' . $row->annuaire_lieu_id . '">Supprimer</a></td>';
-    echo '<td><!--Dupliquer--></td>';
     echo '</tr>';
   }
   echo '</tbody>';
@@ -332,7 +331,7 @@ function BackOfficeLieux()
   echo '<th id="Nom" class="manage-column column-title column-primary sortable desc"><a><span>Nom</span></a></th>';
   echo '<th id="Coordonnees" class="manage-column column-title column-primary sortable desc"><a><span>Coordonnées</span></a></th>';
   echo '<th id="Adresse" class="manage-column column-title column-primary sortable desc"><a><span>Adresse</span></a></th>';
-  echo '<th colspan="3">&nbsp;</th>';
+  echo '<th colspan="2">&nbsp;</th>';
   echo '</tr>';
   echo '</tfoot>';
   echo '</table>';
