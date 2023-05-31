@@ -58,13 +58,55 @@ function gie_alertes_list_callback()
 {
     global $wpdb;
 
-    $alerts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}gie_alertes");
+    // Récupération des paramètres de recherche et de pagination
+    $search_query = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
+    $per_page = 20;
+    $current_page = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+    $offset = ($current_page - 1) * $per_page;
+
+    // Construction de la requête de recherche avec pagination
+    $query = "SELECT * FROM {$wpdb->prefix}gie_alertes";
+
+    if (!empty($search_query)) {
+        $query .= $wpdb->prepare(
+            " WHERE alert_text LIKE %s",
+            '%' . $wpdb->esc_like($search_query) . '%'
+        );
+    }
+
+    $query .= " LIMIT $per_page OFFSET $offset";
+
+    $alerts = $wpdb->get_results($query);
+
+    // Construction de la requête de comptage pour la pagination
+    $row_count_query = "SELECT COUNT(*) FROM {$wpdb->prefix}gie_alertes";
+
+    if (!empty($search_query)) {
+        $row_count_query .= $wpdb->prepare(
+            " WHERE alert_text LIKE %s",
+            '%' . $wpdb->esc_like($search_query) . '%'
+        );
+    }
+
+    $row_count = $wpdb->get_var($row_count_query);
+    $total_pages = ceil($row_count / $per_page);
 
     ?>
     <div class="wrap">
         <h1 class="wp-heading-inline">Toutes les alertes</h1>
         <a href="admin.php?page=ajouterAlerte" class="page-title-action">Ajouter</a>
         <hr class="wp-header-end">
+
+        <!-- Champ de recherche -->
+        <form method="get" action="<?php echo admin_url('admin.php'); ?>">
+            <input type="hidden" name="page" value="gie_alertes_list">
+            <p class="search-box">
+                <label class="screen-reader-text" for="alert-search-input">Rechercher :</label>
+                <input type="search" id="alert-search-input" name="search" value="<?php echo esc_attr($search_query); ?>">
+                <input type="submit" id="alert-search-submit" class="button" value="Rechercher">
+            </p>
+        </form>
+
         <table class="wp-list-table widefat fixed striped table-view-excerpt posts">
             <thead>
                 <tr>
@@ -135,14 +177,40 @@ function gie_alertes_list_callback()
                             ?>
                             
                         </td>
-
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+
+        <!-- Pagination -->
+        <?php if ($total_pages > 1) : ?>
+            <div class="tablenav">
+                <div class="tablenav-pages">
+                    <span class="displaying-num"><?php echo sprintf(
+                        _n(
+                            '1 élément',
+                            '%s éléments',
+                            $row_count,
+                            'text-domain'
+                        ),
+                        number_format_i18n($row_count)
+                    ); ?></span>
+
+                    <?php echo paginate_links(array(
+                        'base' => add_query_arg('paged', '%#%'),
+                        'format' => '',
+                        'prev_text' => __('&laquo; Précédent', 'text-domain'),
+                        'next_text' => __('Suivant &raquo;', 'text-domain'),
+                        'total' => $total_pages,
+                        'current' => $current_page,
+                    )); ?>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
     <?php
 }
+
 
 // Page de suppression d'une alerte
 function gie_alertes_delete_callback()
