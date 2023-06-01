@@ -255,7 +255,7 @@ function gie_alertes_edit_callback()
             $alert_text_size = $_POST['alert_text_size'];
             $alert_background_color = $_POST['alert_background_color'];
             $alert_text_color = $_POST['alert_text_color'];
-            $alert_icon = $_POST['alert_icon'];
+            //$alert_icon = $_POST['alert_icon'];
             $alert_date_start = $_POST['alert_date_start'];
             $alert_date_end = $_POST['alert_date_end'];
             $alert_link_type = $_POST['alert_link_type'];
@@ -270,7 +270,7 @@ function gie_alertes_edit_callback()
                     'alert_text_size' => $alert_text_size,
                     'alert_background_color' => $alert_background_color,
                     'alert_text_color' => $alert_text_color,
-                    'alert_icon' => $alert_icon,
+                    // 'alert_icon' => $alert_icon,
                     'alert_date_start' => $alert_date_start,
                     'alert_date_end' => $alert_date_end,
                     'alert_link_type' => $alert_link_type,
@@ -305,7 +305,7 @@ function gie_alertes_edit_callback()
                 <label for="alert_text">Texte de l'alerte :</label>
                 <input type="text" name="alert_text" id="alert_text" value="<?php echo $alert->alert_text; ?>" required style="width: 700px; height: 10px;"><br>
 
-                <label for="alert_text_size">Taille du texte :</label>
+                <label for="alert_text_size">Taille du texte (en pt) :</label>
                 <input type="number" name="alert_text_size" id="alert_text_size" value="<?php echo $alert->alert_text_size; ?>"
                     required><br>
 

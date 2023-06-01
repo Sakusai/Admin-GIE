@@ -20,9 +20,9 @@ function alerte_bd()
     `alert_icon` varchar(11) NOT NULL,
     `alert_date_start` date NOT NULL,
     `alert_date_end` date NOT NULL,
-    `alert_link_type` varchar(50) NOT NULL,
-    `alert_link` varchar(200) NOT NULL,
-    `alert_link_blank` boolean NOT NULL,
+    `alert_link_type` varchar(50) NULL,
+    `alert_link` varchar(200) NULL,
+    `alert_link_blank` boolean NULL,
     `alert_display` boolean NOT NULL DEFAULT FALSE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;");
 }
@@ -63,7 +63,7 @@ function alert_page()
     $alert_date_start = $_POST['alert_date_start'];
     $alert_date_end = $_POST['alert_date_end'];
     $alert_link_type = $_POST['alert_link_type'];
-    $alert_link = $_POST['alert_link'];
+    $alert_link = isset($_POST['alert_link']) ? $_POST['alert_link'] : null;
     $alert_link_blank = isset($_POST['alert_link_blank']);
     $alert_display = isset($_POST['alert_display']);
 
@@ -125,7 +125,7 @@ function alert_page()
       <input type="text" name="alert_text" id="alert_text" required style="width: 700px; height: 10px;">
       <br>
 
-      <label for="alert_text_size">Taille du texte :</label>
+      <label for="alert_text_size">Taille du texte (en pt) :</label>
       <input type="number" name="alert_text_size" id="alert_text_size" required>
       <br>
 
@@ -137,10 +137,10 @@ function alert_page()
       <input type="color" name="alert_text_color" id="alert_text_color" value="#FFFFFF" required>
       <br>
       <?php /*
-      <label for="alert_icon">Icône :</label>
-      <input type="text" name="alert_icon" id="alert_icon" required>
-      <br>
-      */ ?>
+<label for="alert_icon">Icône :</label>
+<input type="text" name="alert_icon" id="alert_icon" required>
+<br>
+*/?>
 
       <label for="alert_date_start">Date de début :</label>
       <input type="date" name="alert_date_start" id="alert_date_start" required>
@@ -149,9 +149,9 @@ function alert_page()
       <label for="alert_date_end">Date de fin :</label>
       <input type="date" name="alert_date_end" id="alert_date_end" required>
       <br>
-
       <label for="alert_link_type">Type de lien :</label><br>
-      <input type="radio" name="alert_link_type" value="custom" checked> Custom<br>
+      <input type="radio" name="alert_link_type" value="null" checked> Aucun<br>
+      <input type="radio" name="alert_link_type" value="custom"> Custom<br>
       <input type="radio" name="alert_link_type" value="articles"> Articles<br>
       <input type="radio" name="alert_link_type" value="pages"> Pages<br>
       <input type="radio" name="alert_link_type" value="evenements"> Événements<br>
@@ -173,37 +173,63 @@ function alert_page()
           echo '<option value="' . get_permalink($article) . '">' . $article->post_title . '</option>';
         }
 
-        // Ajouter un écouteur d'événements sur les boutons radio
-        echo '<script>';
-        echo 'document.querySelectorAll(\'input[type="radio"][name="alert_link_type"]\').forEach(function(element) {';
-        echo '  element.addEventListener(\'change\', function() {';
-        echo '    var linkSelect = document.querySelector(\'#alert_link\');';
-        echo '    var customLinkContainer = document.querySelector(\'#custom_link_container\');';
-        echo '    linkSelect.innerHTML = \'\';'; // Vider la liste déroulante
-        echo '    if (element.value === "custom") {';
-        echo '      linkSelect.style.display = "none";'; // Masquer la liste déroulante
-        echo '      customLinkContainer.style.display = "block";'; // Afficher le champ de texte
-        echo '    } else {';
-        echo '      linkSelect.style.display = "block";'; // Afficher la liste déroulante
-        echo '      customLinkContainer.style.display = "none";'; // Masquer le champ de texte
-        echo '      if (element.value === "pages") {';
+        // Ajouter les options des pages
         foreach ($pages as $page) {
-          echo '        linkSelect.innerHTML += \'<option value="' . get_permalink($page) . '">' . $page->post_title . '</option>\';';
+          echo '<option value="' . get_permalink($page) . '">' . $page->post_title . '</option>';
         }
-        echo '      } else if (element.value === "evenements") {';
+
+        // Ajouter les options des événements
         foreach ($evenements as $evenement) {
-          echo '        linkSelect.innerHTML += \'<option value="' . get_permalink($evenement) . '">' . $evenement->post_title . '</option>\';';
+          echo '<option value="' . get_permalink($evenement) . '">' . $evenement->post_title . '</option>';
         }
-        echo '      } else {'; // Par défaut, afficher la liste des articles
-        foreach ($articles as $article) {
-          echo '        linkSelect.innerHTML += \'<option value="' . get_permalink($article) . '">' . $article->post_title . '</option>\';';
-        }
-        echo '      }';
-        echo '    }';
-        echo '  });';
-        echo '});';
-        echo '</script>';
         ?>
+      </select>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          var linkTypeRadios = document.querySelectorAll('input[type="radio"][name="alert_link_type"]');
+          var linkSelect = document.querySelector('#alert_link');
+          var customLinkContainer = document.querySelector('#custom_link_container');
+
+          linkTypeRadios.forEach(function (radio) {
+            radio.addEventListener('change', function () {
+              if (radio.value === "null") {
+                linkSelect.value = ""; // La valeur de alert_link est nulle
+                customLinkContainer.style.display = "none";
+              } else if (radio.value === "custom") {
+                linkSelect.style.display = "none";
+                customLinkContainer.style.display = "block";
+              } else {
+                linkSelect.style.display = "block";
+                customLinkContainer.style.display = "none";
+                linkSelect.innerHTML = ""; // Vider la liste déroulante
+
+                <?php
+                // Ajouter les options en fonction de la valeur sélectionnée
+                foreach ($pages as $page) {
+                  echo 'if (radio.value === "pages") {';
+                  echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($page) . '">' . $page->post_title . '</option>\';';
+                  echo '}';
+                }
+
+                foreach ($evenements as $evenement) {
+                  echo 'if (radio.value === "evenements") {';
+                  echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($evenement) . '">' . $evenement->post_title . '</option>\';';
+                  echo '}';
+                }
+
+                foreach ($articles as $article) {
+                  echo 'if (radio.value === "articles" || radio.value === "") {';
+                  echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($article) . '">' . $article->post_title . '</option>\';';
+                  echo '}';
+                }
+                ?>
+              }
+            });
+          });
+        });
+      </script>
+
       </select>
       <br>
 
