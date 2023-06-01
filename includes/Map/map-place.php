@@ -890,15 +890,20 @@ function BackOfficeLieuSuppr()
   global $wpdb;
   echo '<h1>' . get_admin_page_title() . '</h1>';
   $liid = $_GET['nuid'];
-  // Vérifier si l'utilisateur a soumis le formulaire de confirmatio
+
+  // Récupérer les informations sur le lieu
+  $table_matable = "{$wpdb->prefix}annuaire_lieu";
+  $enreg = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_matable WHERE annuaire_lieu_id = $liid "));
+
   // Afficher le formulaire de confirmation
   echo '<form method="post" action="admin.php?page=affichageLieux">
-    <input type="hidden" name="id" value="' . $liid . '">
-    <input type="hidden" name="actionLI" value="SupprLI">
-    <label>Êtes-vous sûr de vouloir supprimer ce lieu?</label>';
+  <input type="hidden" name="id" value="' . $liid . '">
+  <input type="hidden" name="actionLI" value="SupprLI">
+  <label>Êtes-vous sûr de vouloir supprimer ' . $enreg->annuaire_lieu_nom  .' ( id = '. $liid .' )?</label>';
   submit_button('Supprimer'); // bouton submit.
   echo '</form> <button onclick="history.go(-1);">Retour</button>';
 }
+
 
 function actionCat()
 { // name="actionLI" value="AjoutLI"
