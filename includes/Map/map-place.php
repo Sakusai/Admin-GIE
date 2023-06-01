@@ -237,19 +237,21 @@ function BackOfficeLieux()
   echo '</form>';
 
   // Champ de filtre
-  $categories = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}annuaire_categorie");
+  $categories = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}annuaire_categorie ORDER BY annuaire_cat_nom ASC");
   echo '<form method="GET" action="admin.php">';
   echo '<input type="hidden" name="page" value="affichageLieux">';
   echo '<label class="screen-reader-text" for="category-filter">Filtrer par catégorie</label>';
   echo '<select name="category" id="category-filter" class="wp-filter-select">';
   echo '<option value="">Toutes les catégories</option>';
+
+  // Parcourir les catégories
   foreach ($categories as $category) {
     echo '<option value="' . $category->annuaire_cat_id . '">' . $category->annuaire_cat_nom . '</option>';
   }
+
   echo '</select>';
   echo '<input type="submit" value="Filtrer" class="button">';
   echo '</form>';
-
   // Pagination
   $per_page = 20; // Nombre de lieux par page
   $current_page = isset($_GET['paged']) ? max(1, absint($_GET['paged'])) : 1;
