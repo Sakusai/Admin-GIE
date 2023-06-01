@@ -801,75 +801,106 @@ function BackOfficeCatAjout()
   //annuaire_cat_ordre					int			UNSIGNED				Non	Aucun(e)	
   //annuaire_cat_valid					tinyint(1) 							Non	Aucun(e)	
 
-  global $wpdb;
-  // get_admin_page_title() est une fonction qui permet de récupérer le titre définit dans le 1er argument de la fonction add_menu_page().
-  echo '<h1>' . get_admin_page_title() . '</h1>';
-  // Sur cette page nous décidons d'afficher un formulaire pour ajouter un lieu.
-  echo '<form method="post" action="admin.php?page=affichageCategories">
-                <input type="hidden" name="actionCAT" value="AjoutCAT">
-              <table class="wp-list-table striped table-view-excerpt posts borderspacingz">
-                <tr>
-                    <td><label for="cat_nom">Nom de la catégorie</label></td> 
-                    <td colspan="2"><input type="text" size="100" id="cat_nom" name="nom" value=""></td> 
-                </tr><tr>
-                    <td><label for="cat_parent">Catégorie parent</label></td> 
-                    <td colspan="2"><input type="text" id="cat_parent" name="parent" value=""></td> 
-                </tr><tr>
-                    <td><label for="cat_ordre">Ordre</label></td>
-                    <td colspan="2"><input type="text" id="cat_ordre" name="ordre" value=""></td>
-                </tr><tr>
+ global $wpdb;
+// get_admin_page_title() est une fonction qui permet de récupérer le titre définit dans le 1er argument de la fonction add_menu_page().
+echo '<h1>' . get_admin_page_title() . '</h1>';
+// Sur cette page nous décidons d'afficher un formulaire pour ajouter un lieu.
+?>
+<form method="post" action="admin.php?page=affichageCategories">
+        <input type="hidden" name="actionCAT" value="AjoutCAT">
+        <table class="wp-list-table striped table-view-excerpt posts borderspacingz">
+            <tr>
+                <td><label for="cat_nom">Nom de la catégorie</label></td> 
+                <td colspan="2"><input type="text" size="100" id="cat_nom" name="nom" value=""></td> 
+            </tr>
+            <tr>
+                <td><label for="cat_parent">Catégorie parent</label></td> 
+                <td colspan="2">
+                    <select id="cat_parent" name="parent">
+                        <option value="0">Aucune</option>';
+                        <?php
+                        // Récupérer la liste des catégories parentes depuis la base de données
+                        $categories = get_categories();
+                        foreach ($categories as $category) {
+                            echo '<option value="' . $category->term_id . '">' . $category->name . '</option>';
+                        }
+                        ?>
+            </select>
+                </td> 
+            </tr>
+            <tr>
+                <td><label for="cat_ordre">Ordre</label></td>
+                <td colspan="2"><input type="text" id="cat_ordre" name="ordre" value=""></td>
+            </tr>
+            <tr>
                 <td><label for="lieu_valid">Validation</label></td>
                 <td colspan="2"><input type="checkbox" id="lieu_valid" name="valid" checked></td>
-              </tr>
-              </table>';
-  submit_button("Ajouter la catégorie"); // bouton submit.
-  echo '</form>';
-  echo '<button onclick="history.go(-1);">Retour</button>';
+            </tr>
+        </table>
+<?php submit_button("Ajouter la catégorie"); // bouton submit. ?>
+</form>'
+<button onclick="history.go(-1);">Retour</button>
 
+<?php
 }
 function BackOfficeCatMod()
 {
-  global $wpdb;
-  echo '<h1>' . get_admin_page_title() . '</h1>';
-  $catid = $_GET['nuid'];
-  echo "<p>ID Catégorie : " . $catid . "</p>";
-  $table_matable = "{$wpdb->prefix}annuaire_categorie";
-  $enreg = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_matable WHERE annuaire_cat_id = $catid "));
-  if (!($enreg === FALSE)) {
-    $checked = "checked";
-    if ($enreg->annuaire_cat_valid == 1) {
-      $checked = " checked";
-    } else {
-      $checked = "";
-    }
-    // Sur cette page nous décidons d'afficher un formulaire pour modifier un lieu.
-    echo '<form method="post" action="admin.php?page=affichageCategories">
-            <input type="hidden" name="id" value="' . $catid . '">
-            <input type="hidden" name="actionCAT" value="ModifieCAT">
-            <label>Modification de la catégorie : </label><br />
-            <table class="wp-list-table striped table-view-excerpt posts borderspacingz">
-            <tr>
-                <td><label for="cat_nom">Nom de la catégorie</label></td> 
-                <td colspan="2"><input type="text" size="100" id="cat_nom" name="nom" value="' . $enreg->annuaire_cat_nom . '"></td> 
-            </tr><tr>
-                <td><label for="cat_parent">Catégorie parent</label></td> 
-                <td colspan="2"><input type="text" id="cat_parent" name="parent" value="' . $enreg->annuaire_parent . '"></td> 
-            </tr><tr>
-                <td><label for="cat_ordre">Ordre</label></td>
-                <td colspan="2"><input type="text" id="cat_ordre" name="ordre" value="' . $enreg->annuaire_cat_ordre . '"></td>
-            </tr><tr>
-            <td><label for="lieu_valid">Validation</label></td>
-            <td colspan="2"><input type="checkbox" id="lieu_valid" name="valid" ' . $checked . '></td>
-          </tr>
-          </table>';
-    submit_button(); // bouton submit.
-    echo '</form>';
-    echo '<button onclick="history.go(-1);">Retour</button>';
-  } else {
-    echo __("Oups ! Un problème a été rencontré.");
-  }
+    global $wpdb;
+    echo '<h1>' . get_admin_page_title() . '</h1>';
+    $catid = $_GET['nuid'];
+    echo "<p>ID Catégorie : " . $catid . "</p>";
+    $table_matable = "{$wpdb->prefix}annuaire_categorie";
+    $enreg = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_matable WHERE annuaire_cat_id = $catid "));
+    if (!($enreg === FALSE)) {
+        $checked = "checked";
+        if ($enreg->annuaire_cat_valid == 1) {
+            $checked = " checked";
+        } else {
+            $checked = "";
+        }
+        // Sur cette page nous décidons d'afficher un formulaire pour modifier un lieu.
+        echo '<form method="post" action="admin.php?page=affichageCategories">
+                <input type="hidden" name="id" value="' . $catid . '">
+                <input type="hidden" name="actionCAT" value="ModifieCAT">
+                <label>Modification de la catégorie : </label><br />
+                <table class="wp-list-table striped table-view-excerpt posts borderspacingz">
+                    <tr>
+                        <td><label for="cat_nom">Nom de la catégorie</label></td> 
+                        <td colspan="2"><input type="text" size="100" id="cat_nom" name="nom" value="' . $enreg->annuaire_cat_nom . '"></td> 
+                    </tr>
+                    <tr>
+                        <td><label for="cat_parent">Catégorie parent</label></td> 
+                        <td colspan="2">
+                            <select id="cat_parent" name="parent">
+                                <option value="0">Aucune</option>';
 
+                                // Récupérer la liste des catégories parentes depuis la base de données
+                                $categories = get_categories();
+                                foreach ($categories as $category) {
+                                    $selected = ($enreg->annuaire_parent == $category->term_id) ? 'selected' : '';
+                                    echo '<option value="' . $category->term_id . '" ' . $selected . '>' . $category->name . '</option>';
+                                }
+
+        echo '                  </select>
+                        </td> 
+                    </tr>
+                    <tr>
+                        <td><label for="cat_ordre">Ordre</label></td>
+                        <td colspan="2"><input type="text" id="cat_ordre" name="ordre" value="' . $enreg->annuaire_cat_ordre . '"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="lieu_valid">Validation</label></td>
+                        <td colspan="2"><input type="checkbox" id="lieu_valid" name="valid" ' . $checked . '></td>
+                    </tr>
+                </table>';
+        submit_button(); // bouton submit.
+        echo '</form>';
+        echo '<button onclick="history.go(-1);">Retour</button>';
+    } else {
+        echo __("Oups ! Un problème a été rencontré.");
+    }
 }
+
 function BackOfficeCatSuppr()
 {
   global $wpdb;
