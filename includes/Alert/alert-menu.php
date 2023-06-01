@@ -150,87 +150,71 @@ function alert_page()
       <input type="date" name="alert_date_end" id="alert_date_end" required>
       <br>
       <label for="alert_link_type">Type de lien :</label><br>
-<input type="radio" name="alert_link_type" value="null" checked> Aucun<br>
-<input type="radio" name="alert_link_type" value="custom"> Custom<br>
-<input type="radio" name="alert_link_type" value="articles"> Articles<br>
-<input type="radio" name="alert_link_type" value="pages"> Pages<br>
-<input type="radio" name="alert_link_type" value="evenements"> Événements<br>
+      <input type="radio" name="alert_link_type" value="null" checked> Aucun<br>
+      <input type="radio" name="alert_link_type" value="custom"> Custom<br>
+      <input type="radio" name="alert_link_type" value="articles"> Articles<br>
+      <input type="radio" name="alert_link_type" value="pages"> Pages<br>
+      <input type="radio" name="alert_link_type" value="evenements"> Événements<br>
 
-<label for="alert_link">Lien :</label><br>
-<div id="custom_link_container" style="display: none;">
-  <input type="text" name="custom_link" id="custom_link">
-</div>
-
-<select name="alert_link" id="alert_link">
-  <?php
-  // Récupérer tous les articles, pages et événements
-  $articles = get_posts(array('post_type' => 'post'));
-  $pages = get_pages();
-  $evenements = get_posts(array('post_type' => 'event'));
-
-  // Par défaut, afficher la liste des articles
-  foreach ($articles as $article) {
-    echo '<option value="' . get_permalink($article) . '">' . $article->post_title . '</option>';
-  }
-
-  // Ajouter les options des pages
-  foreach ($pages as $page) {
-    echo '<option value="' . get_permalink($page) . '">' . $page->post_title . '</option>';
-  }
-
-  // Ajouter les options des événements
-  foreach ($evenements as $evenement) {
-    echo '<option value="' . get_permalink($evenement) . '">' . $evenement->post_title . '</option>';
-  }
-  ?>
-</select>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var linkTypeRadios = document.querySelectorAll('input[type="radio"][name="alert_link_type"]');
-    var linkSelect = document.querySelector('#alert_link');
-    var customLinkContainer = document.querySelector('#custom_link_container');
-
-    linkTypeRadios.forEach(function(radio) {
-      radio.addEventListener('change', function() {
-        if (radio.value === "null") {
-          linkSelect.value = ""; // La valeur de alert_link est nulle
-          customLinkContainer.style.display = "none";
-        } else if (radio.value === "custom") {
-          linkSelect.style.display = "none";
-          customLinkContainer.style.display = "block";
-        } else {
-          linkSelect.style.display = "block";
-          customLinkContainer.style.display = "none";
-          linkSelect.innerHTML = ""; // Vider la liste déroulante
-
-          <?php
-          // Ajouter les options en fonction de la valeur sélectionnée
-          foreach ($pages as $page) {
-            echo 'if (radio.value === "pages") {';
-            echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($page) . '">' . $page->post_title . '</option>\';';
-            echo '}';
-          }
-
-          foreach ($evenements as $evenement) {
-            echo 'if (radio.value === "evenements") {';
-            echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($evenement) . '">' . $evenement->post_title . '</option>\';';
-            echo '}';
-          }
-
-          foreach ($articles as $article) {
-            echo 'if (radio.value === "articles" || radio.value === "") {';
-            echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($article) . '">' . $article->post_title . '</option>\';';
-            echo '}';
-          }
-          ?>
-        }
-      });
-    });
-  });
-</script>
-
+      <label for="alert_link">Lien :</label><br>
+      <div id="custom_link_container" style="display: none;">
+        <input type="text" name="custom_link" id="custom_link">
+      </div>
+      <select name="alert_link" id="alert_link">
+      <option value="Choisir">
       </select>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          var linkTypeRadios = document.querySelectorAll('input[type="radio"][name="alert_link_type"]');
+          var linkSelect = document.querySelector('#alert_link');
+          var customLinkContainer = document.querySelector('#custom_link_container');
+
+          linkTypeRadios.forEach(function (radio) {
+            radio.addEventListener('change', function () {
+              if (radio.value === "null") {
+                linkSelect.value = ""; // La valeur de alert_link est nulle
+                customLinkContainer.style.display = "none";
+              } else if (radio.value === "custom") {
+                linkSelect.style.display = "none";
+                customLinkContainer.style.display = "block";
+              } else {
+                linkSelect.style.display = "block";
+                customLinkContainer.style.display = "none";
+                linkSelect.innerHTML = ""; // Vider la liste déroulante
+                
+                  <?php
+                  // Récupérer tous les articles, pages et événements
+                  $articles = get_posts(array('post_type' => 'post'));
+                  $pages = get_pages();
+                  $evenements = get_posts(array('post_type' => 'event'));
+
+
+                  // Ajouter les options en fonction de la valeur sélectionnée
+                  foreach ($pages as $page) {
+                    echo 'if (radio.value === "pages") {';
+                    echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($page) . '">' . str_replace("'", "\'", $page->post_title) . '</option>\';';
+                    echo '}';
+                  }
+
+                  foreach ($evenements as $evenement) {
+                    echo 'if (radio.value === "evenements") {';
+                    echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($evenement) . '">' . str_replace("'", "\'", $evenement->post_title) . '</option>\';';
+                    echo '}';
+                  }
+
+                  foreach ($articles as $article) {
+                    echo 'if (radio.value === "articles" || radio.value === "") {';
+                    echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($article) . '">' . str_replace("'", "\'", $article->post_title). '</option>\';';
+                    echo '}';
+                  }
+                  ?>
+                
+              }
+            });
+          });
+        });
+      </script>
+
       <br>
 
       <label for="alert_link_blank">Ouvrir le lien dans une nouvelle fenêtre </label>
