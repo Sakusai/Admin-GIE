@@ -8,12 +8,22 @@ add_shortcode('slider_article', 'slider_article_shortcode');
 /**
  * Shortcode pour afficher une sorte de carrousel qui affiche les événements d'une certaine période donnée
  */
-function slider_article_shortcode($idCat)
-{
+function slider_article_shortcode($atts) {
     ob_start(); // Met en mémoire tampon la sortie du code
+       // Paramètres par défaut du shortcode
+       $defaults = array(
+        'idcat' => 0,
+        'nbslide' => 3,
+        'format' => 1,
+        'speeddefil' => 3000,
+        'speed' => 300
+    );
+
+    // Fusionner les paramètres par défaut avec les paramètres du shortcode
+    $atts = shortcode_atts($defaults, $atts);
     $args = array(
-        'showposts' => 15,
-        'cat' => $idCat,
+        'posts_per_page' => 15,
+        'cat' => isset($atts['idcat']) ? $atts['idcat'] : 0,
         'orderby' => 'post_modified'
     );
 
@@ -27,15 +37,11 @@ function slider_article_shortcode($idCat)
     <link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url(__FILE__) . '../CSS/style.css'; ?>">
     <!-- Lien vers notre fichier css -->
     <div class="responsive">
-        <?php
-        $slides_to_show = get_option('post_slides_to_show', 4);
-        $slides_speed = get_option('post_slides_speed', 3000);
-        $slides_speed_pass = get_option('post_slides_speed_pass', 300);
-        $slides_format = get_option('post_slides_format', 1);
+    <?php
         while ($articles->have_posts()) {
             $articles->the_post(); // Séléctionne puis enlève le premier événement de la liste 
-            if ($slides_format == 1) {
-                $slides_to_show=3;
+            if ($atts['format'] == 1) {
+                $atts['nbslide'] = 3;
                 ?>
                 <div class="slider-cat">
                     <div class="img-cat">
@@ -63,44 +69,45 @@ function slider_article_shortcode($idCat)
     </div>
     <!-- On Récupère ici tous les scripts js nécessaires pour le slider -->
     <script type="text/javascript" src="<?php echo plugins_url('../JS/jquery-3.6.4.min.js', __FILE__); ?>"></script>
-    <script type="text/javascript"
-        src="<?php echo plugins_url('../JS/jquery-migrate-1.4.1.min.js', __FILE__); ?>"></script>
+    <script type="text/javascript" src="<?php echo plugins_url('../JS/jquery-migrate-1.4.1.min.js', __FILE__); ?>"></script>
     <script type="text/javascript" src="<?php echo plugins_url('../slick/slick.min.js', __FILE__); ?>"></script>
     <!-- Début du script slick (carrousel)-->
     <script type="text/javascript">
-        $('.responsive').slick({
-            dots: false, //Affichage ou non des points en bas du slider
-            infinite: true,  //Boucle infini ou non des slides
-            speed: <?php echo $slides_speed_pass ?>, //Vitesse de défilement entre deux slides
-            autoplay: true, // Défilement automatique
-            autoplaySpeed: <?php echo $slides_speed ?>, // Vitesse du défilement automatique
-            slidesToShow: <?php echo $slides_to_show ?>, // Nombre de slide à afficher
-            slidesToScroll: 1, // Nombre de slide qui défile
-            responsive: [ // Adaptation avec des écrans plus petits
-                {
-                    breakpoint: 1024,
-                    settings: {
-                        slidesToShow: 3,
-                        slidesToScroll: 1,
-                        infinite: true,
-                        dots: false
+        jQuery(document).ready(function($) {
+            $('.responsive').slick({
+                dots: false, //Affichage ou non des points en bas du slider
+                infinite: true,  //Boucle infinie ou non des slides
+                speed: <?php echo $atts['speed'] ?>, //Vitesse de défilement entre deux slides
+                autoplay: true, // Défilement automatique
+                autoplaySpeed: <?php echo $atts['speeddefil'] ?>, // Vitesse du défilement automatique
+                slidesToShow: <?php echo $atts['nbslide'] ?>, // Nombre de slide à afficher
+                slidesToScroll: 1, // Nombre de slide qui défile
+                responsive: [ // Adaptation avec des écrans plus petits
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 1,
+                            infinite: true,
+                            dots: false
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
                     }
-                },
-                {
-                    breakpoint: 600,
-                    settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 2
-                    }
-                },
-                {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1
-                    }
-                }
-            ]
+                ]
+            });
         });
     </script>
     <?php
