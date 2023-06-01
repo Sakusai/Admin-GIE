@@ -244,14 +244,19 @@ function BackOfficeLieux()
   echo '<select name="category" id="category-filter" class="wp-filter-select">';
   echo '<option value="">Toutes les catégories</option>';
 
+  // Récupérer la catégorie sélectionnée (si présente dans les paramètres GET)
+  $currentCategory = isset($_GET['category']) ? $_GET['category'] : '';
+
   // Parcourir les catégories
   foreach ($categories as $category) {
-    echo '<option value="' . $category->annuaire_cat_id . '">' . $category->annuaire_cat_nom . '</option>';
+    $selected = $currentCategory == $category->annuaire_cat_id ? 'selected' : '';
+    echo '<option value="' . $category->annuaire_cat_id . '" ' . $selected . '>' . $category->annuaire_cat_nom . '</option>';
   }
 
   echo '</select>';
   echo '<input type="submit" value="Filtrer" class="button">';
   echo '</form>';
+
   // Pagination
   $per_page = 20; // Nombre de lieux par page
   $current_page = isset($_GET['paged']) ? max(1, absint($_GET['paged'])) : 1;
