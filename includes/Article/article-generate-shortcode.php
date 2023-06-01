@@ -27,23 +27,29 @@ function shortcode_generate_page()
     $categories = get_categories();
     echo '<h1>Générateur de shortcode pour les sliders de catégorie</h1>';
     // Création du formulaire
+// Création du formulaire
     $form = '<form method="post">';
     $form .= '<label for="categorie">Catégorie :</label>';
-    // Récupérer les catégories
-    $categories = get_categories();
 
     // Générer le menu déroulant des catégories
-    $form .= '<select name="categorie" id="categorie">';
-    foreach ($categories as $categorie) {
-        $form .= '<option value="' . $categorie->term_id . '">' . $categorie->name . '</option>';
-    }
-    $form .= '</select>';
+    $form .= wp_dropdown_categories(
+        array(
+            'name' => 'categorie',
+            'id' => 'categorie',
+            'show_option_none' => 'Choisir une catégorie',
+            'option_none_value' => '',
+            'orderby' => 'name',
+            'hide_empty' => false,
+            'echo' => false,
+        )
+    );
 
     $form .= '<input type="submit" value="Valider">';
     $form .= '</form>';
 
     // Affichage du formulaire
     echo $form;
+
 
     // Traitement du formulaire
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
