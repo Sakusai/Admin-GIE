@@ -13,7 +13,7 @@ function shortcode_settings_page()
     add_submenu_page(
         'administration-gie',
         "Générateur de shortcode",
-        'Shortcode Slider de catégorie',
+        'Slider d\'article',
         'manage_options',
         'generator-shortcode',
         'shortcode_generate_page'
@@ -25,12 +25,13 @@ function shortcode_generate_page()
 {
     // Récupération de toutes les catégories
     $categories = get_categories();
-    echo '<h1>Générateur de shortcode pour les sliders de catégorie</h1>';
+    echo '<h1>Créer un shortcode pour afficher un slider d\'article</h1>';
+    echo '<h4>Vous pouvez générer un shortcode qui vous permettra d\'afficher un carrousel des articles de la catégorie choisie</h4>';
+    
     // Création du formulaire
-// Création du formulaire
     $form = '<form method="post">';
     $form .= '<label for="categorie">Catégorie :</label>';
-
+    
     // Générer le menu déroulant des catégories
     $form .= wp_dropdown_categories(
         array(
@@ -41,16 +42,16 @@ function shortcode_generate_page()
             'orderby' => 'name',
             'hide_empty' => false,
             'echo' => false,
+            'selected' => isset($_POST['categorie']) ? $_POST['categorie'] : false, // Conserve la catégorie sélectionnée lors de la soumission du formulaire
         )
     );
-
+    
     $form .= '<input type="submit" value="Valider">';
     $form .= '</form>';
-
+    
     // Affichage du formulaire
     echo $form;
-
-
+    
     // Traitement du formulaire
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['categorie'])) {
@@ -63,7 +64,7 @@ function shortcode_generate_page()
                 }
             }
             $shortcode = '[slider_article idCat=' . $categorie_id . ']' . $categorie_name . '[/slider_article]';
-
+            
             echo '<textarea id="generatedText" rows="5" readonly>' . $shortcode . '</textarea>';
             echo '<button id="copyButton" onclick="copyText()">Copier</button>';
             echo '<script>
