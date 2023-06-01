@@ -414,7 +414,7 @@ function BackOfficeLieuAjout()
                 <input type="hidden" name="actionLI" value="AjoutLI">
               <table class="wp-list-table striped table-view-excerpt posts borderspacingz">
                 <tr>
-                    <td><label for="cat">Cat ID</label></td>
+                    <td><label for="cat">Catégorie</label></td>
                     <td><select id="cat" name="cat_id">
                         <option value="">--- Choisir une catégorie ---</option>';
   $rowcatid = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}annuaire_categorie ORDER BY annuaire_cat_nom"); // var_dump($row);
@@ -481,9 +481,9 @@ function BackOfficeLieuAjout()
                     <input type="hidden" id="lieu_icone" name="icone" value="">
                 </td>
             </tr><tr>
-                    <td><label for="lieu_date">Date (format : AAAA-MM-JJ)</label></td>
-                    <td><label for="lieu_date_deb">Date de début</label> <input type="text" id="lieu_date_deb" name="date_debut" value=""></td>
-                    <td><label for="lieu_date_fin">Date de fin</label> <input type="text" id="lieu_date_fin" name="date_fin" value=""></td>
+                    <td><label for="lieu_date">Date (format : JJ-MM-AAAA)</label></td>
+                    <td><label for="lieu_date_deb">Date de début</label> <input type="date" id="lieu_date_deb" name="date_debut" value=""></td>
+                    <td><label for="lieu_date_fin">Date de fin</label> <input type="date" id="lieu_date_fin" name="date_fin" value=""></td>
                 </tr><tr>
                     <td><label for="lieu_valid">Validation</label></td>
                     <td colspan="2"><input type="checkbox" id="lieu_valid" name="valid" checked></td>
@@ -551,7 +551,7 @@ function BackOfficeLieuMod()
             <label>Modification du lieu : </label><br />
             <table class="wp-list-table striped table-view-excerpt posts borderspacingz">
               <tr>
-                <td><label for="cat">Cat ID</label></td>
+                <td><label for="cat">Catégorie</label></td>
                 <td><select id="cat" name="cat_id">
                     <option value="">--- Choisir une catégorie ---</option>';
 
@@ -643,9 +643,9 @@ function BackOfficeLieuMod()
 
     <?php
     echo '<tr>
-                <td><label for="lieu_date">Date (format : AAAA-MM-JJ)</label></td>
-                <td><label for="lieu_date_deb">Date de début</label> <input type="text" id="lieu_date_deb" name="date_debut" value="' . $enreg->annuaire_date_debut . '"></td>
-                <td><label for="lieu_date_fin">Date de fin</label> <input type="text" id="lieu_date_fin" name="date_fin" value="' . $enreg->annuaire_date_fin . '"></td>
+                <td><label for="lieu_date">Date (format : JJ-MM-AAAA)</label></td>
+                <td><label for="lieu_date_deb">Date de début</label> <input type="date" id="lieu_date_deb" name="date_debut" value="' . $enreg->annuaire_date_debut . '"></td>
+                <td><label for="lieu_date_fin">Date de fin</label> <input type="date" id="lieu_date_fin" name="date_fin" value="' . $enreg->annuaire_date_fin . '"></td>
             </tr><tr>
                 <td><label for="lieu_valid">Validation</label></td>
                 <td colspan="2"><input type="checkbox" id="lieu_valid" name="valid" ' . $checked . '></td>
