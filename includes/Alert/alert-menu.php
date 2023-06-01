@@ -156,7 +156,6 @@ function alert_page()
       <input type="radio" name="alert_link_type" value="pages"> Pages<br>
       <input type="radio" name="alert_link_type" value="evenements"> Événements<br>
 
-      <label for="alert_link">Lien :</label><br>
       <div id="custom_link_container" style="display: none;">
         <input type="text" name="custom_link" id="custom_link">
       </div>
@@ -168,11 +167,11 @@ function alert_page()
           var linkTypeRadios = document.querySelectorAll('input[type="radio"][name="alert_link_type"]');
           var linkSelect = document.querySelector('#alert_link');
           var customLinkContainer = document.querySelector('#custom_link_container');
-
+          linkSelect.style.display = "none";
           linkTypeRadios.forEach(function (radio) {
             radio.addEventListener('change', function () {
               if (radio.value === "null") {
-                linkSelect.value = ""; // La valeur de alert_link est nulle
+                linkSelect.style.display = "none"; // La valeur de alert_link est nulle
                 customLinkContainer.style.display = "none";
               } else if (radio.value === "custom") {
                 linkSelect.style.display = "none";
