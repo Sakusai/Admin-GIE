@@ -93,23 +93,35 @@ function calculerCentreLieux($catId)
   $coordonnees = $wpdb->get_results($query);
 
   // Initialiser les variables pour le calcul du centre
-  $totalLat = 0;
-  $totalLong = 0;
-  $nombreLieux = count($coordonnees);
+  $minLat = $coordonnees[0]->annuaire_lat;
+  $maxLat = $coordonnees[0]->annuaire_lat;
+  $minLong = $coordonnees[0]->annuaire_long;
+  $maxLong = $coordonnees[0]->annuaire_long;
 
-  // Calculer la somme des latitudes et des longitudes
+  // Trouver la plus petite et la plus grande latitude et longitude
   foreach ($coordonnees as $coordonnee) {
-    $totalLat += $coordonnee->annuaire_lat;
-    $totalLong += $coordonnee->annuaire_long;
+    if ($coordonnee->annuaire_lat < $minLat) {
+      $minLat = $coordonnee->annuaire_lat;
+    }
+    if ($coordonnee->annuaire_lat > $maxLat) {
+      $maxLat = $coordonnee->annuaire_lat;
+    }
+    if ($coordonnee->annuaire_long < $minLong) {
+      $minLong = $coordonnee->annuaire_long;
+    }
+    if ($coordonnee->annuaire_long > $maxLong) {
+      $maxLong = $coordonnee->annuaire_long;
+    }
   }
 
   // Calculer la latitude et la longitude moyenne
-  $centreLat = $totalLat / $nombreLieux;
-  $centreLong = $totalLong / $nombreLieux;
+  $centreLat = ($minLat + $maxLat) / 2;
+  $centreLong = ($minLong + $maxLong) / 2;
 
   // Retourner les coordonnées du centre
   return array('lat' => $centreLat, 'long' => $centreLong);
 }
+
 function ShortCode_Leaflet_GIE($atts, $content)
 {
   global $wpdb;

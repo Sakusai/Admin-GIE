@@ -86,11 +86,8 @@ function BackOfficeGestion() {
 		 <h3>[listingContact_GIE]   Voici les derniers contacts :   [/listingContact_GIE]</h3>
 		 <p>Affiche la liste des contacts</p>
 		 <hr>
-		 <h3>[Leaflet_GIE]   Affiche une carte :   [/Leaflet_GIE]</h3>
-		 <p>Affiche une carte centré sur Chauny</p>
-		 <hr>
-		 <h3>[Leaflet_GIE idcat="20"]   Affiche une carte :   [/Leaflet_GIE]</h3>
-		 <p>Affiche une carte centré sur Chauny avec les différents lieux en fonction de la catégorie.</p>
+		 <h3>[Leaflet_GIE idcat="32"]   Affiche une carte :   [/Leaflet_GIE]</h3>
+		 <p>Affiche une carte centré sur les différents lieux en fonction de la catégorie.</p>
 		 <hr>
 		 <h3>[Lien_Cat_GIE]   Affiche les catégories de lieu :   [/Lien_Cat_GIE]</h3>
 		 <p> Affiche les catégories de lieu sous forme de lien. /!\ Doit être associé au code court "Affichage d\'une carte" /!\ </p>
