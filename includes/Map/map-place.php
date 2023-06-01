@@ -744,7 +744,7 @@ function BackOfficeCategories()
 
   // Affichage du tableau
   echo '<table class="wp-list-table widefat fixed striped table-view-excerpt posts">';
-  echo '<thead><tr><th>ID</th><th>Nom</th><th>Parent</th><th>Numéro d\'ordre</th><th>Validation</th><th> </th></tr></thead>';
+  echo '<thead><tr><th>ID</th><th>Nom</th><th>Parent</th><th>Numéro d\'ordre</th><th>Validation</th><th> </th><th/></tr></thead>';
   echo '<tbody id="the-list">';
   foreach ($row as $valeur) {
     echo '<tr>';
@@ -875,12 +875,16 @@ function BackOfficeCatSuppr()
   global $wpdb;
   echo '<h1>' . get_admin_page_title() . '</h1>';
   $catid = $_GET['nuid'];
+
+  // Récupérer les informations sur le lieu
+  $table_matable = "{$wpdb->prefix}annuaire_categorie ";
+  $enreg = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_matable WHERE annuaire_cat_id = $catid "));
   // Vérifier si l'utilisateur a soumis le formulaire de confirmatio
   // Afficher le formulaire de confirmation
   echo '<form method="post" action="admin.php?page=affichageCategories">
     <input type="hidden" name="id" value="' . $catid . '">
     <input type="hidden" name="actionCAT" value="SupprCAT">
-    <label>Êtes-vous sûr de vouloir supprimer cette catégorie?</label>';
+    <label>Êtes-vous sûr de vouloir supprimer la catégorie ' . $enreg->annuaire_cat_nom  .' ( id = '. $catid .' )?</label>';
   submit_button('Supprimer'); // bouton submit.
   echo '</form> <button onclick="history.go(-1);">Retour</button>';
 
@@ -899,7 +903,7 @@ function BackOfficeLieuSuppr()
   echo '<form method="post" action="admin.php?page=affichageLieux">
   <input type="hidden" name="id" value="' . $liid . '">
   <input type="hidden" name="actionLI" value="SupprLI">
-  <label>Êtes-vous sûr de vouloir supprimer ' . $enreg->annuaire_lieu_nom  .' ( id = '. $liid .' )?</label>';
+  <label>Êtes-vous sûr de vouloir supprimer le lieu ' . $enreg->annuaire_lieu_nom  .' ( id = '. $liid .' )?</label>';
   submit_button('Supprimer'); // bouton submit.
   echo '</form> <button onclick="history.go(-1);">Retour</button>';
 }
