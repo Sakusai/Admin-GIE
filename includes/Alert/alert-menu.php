@@ -160,7 +160,7 @@ function alert_page()
         <input type="text" name="custom_link" id="custom_link">
       </div>
       <select name="alert_link" id="alert_link">
-      <option value="Choisir">
+      <option value="">
       </select>
       <script>
         document.addEventListener("DOMContentLoaded", function () {
