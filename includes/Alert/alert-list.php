@@ -421,12 +421,12 @@ function display_alert_banner() {
 
         foreach ($active_alerts as $alert) {
             // Construire les styles CSS personnalisés
-            $styles = 'background-color: ' . esc_attr($alert->alert_background_color) . '; color: ' . esc_attr($alert->alert_text_color) . '; font-size: ' . esc_attr($alert->alert_text_size) . 'px;';
+            $styles = 'background-color: ' . esc_attr($alert->alert_background_color) . ' ; font-size: ' . esc_attr($alert->alert_text_size) .' px;';
 
             // Construire le code HTML du bandeau d'alerte avec les styles personnalisés
             echo '<div class="alert-banner" style="' . $styles . '">';
             echo '<span class="alert-icon">' . esc_attr($alert->alert_icon) . '</span>';
-            echo '<span class="alert-message"><a href="' . esc_attr($alert->alert_link) . '">' . esc_html($alert->alert_text) . '</a></span>';
+            echo '<span class="alert-message"><a href="' . esc_attr($alert->alert_link) . '" style=" color: ' . esc_attr($alert->alert_text_color) . ';">' . esc_html($alert->alert_text) . '</a></span>';
             echo '<span class="close-button" onclick="closeAlert(this)">&#10006;</span>';
             echo '</div>';
         }
