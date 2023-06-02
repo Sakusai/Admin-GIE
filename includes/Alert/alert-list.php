@@ -556,10 +556,11 @@ function enqueue_alert_scripts() {
         margin-right: 10px;
         overflow: hidden;
         white-space: nowrap;
+        animation: defilement 20s linear infinite;
     }
 
-    .alert-message.marquee {
-        animation: defilement 20s linear infinite;
+    .alert-message.marquee:hover {
+        animation-play-state: paused;
     }
     
     @keyframes defilement {
@@ -578,4 +579,5 @@ function enqueue_alert_scripts() {
         margin-top: 100px; /* Ajoutez une marge en haut pour laisser de la place aux alertes */
     }
 </style>';
+
 }
