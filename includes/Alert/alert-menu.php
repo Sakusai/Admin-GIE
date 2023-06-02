@@ -13,7 +13,7 @@ function alerte_bd()
   // Cette ligne me permet de formuler une requête SQL pour créer une table dans la BDD.
   $wpdb->query("CREATE TABLE IF NOT EXISTS {$wpdb->prefix}gie_alertes (
     `alert_id` int(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `alert_text` varchar(50) CHARACTER SET utf8 NOT NULL,
+    `alert_text` varchar(250) CHARACTER SET utf8 NOT NULL,
     `alert_text_size` int(11) NOT NULL,
     `alert_background_color` varchar(7) NOT NULL,
     `alert_text_color` varchar(7) NOT NULL,
@@ -233,10 +233,9 @@ function alert_page()
 
             <input type="submit" name="submit" value="Ajouter l'alerte">
         </form>
-         <h2>Aperçu :</h2>
-         <div id="preview" style="background-color: <?php echo $alert_background_color; ?>; color: <?php echo $alert_text_color; ?>; font-size: <?php echo $alert_text_size; ?>pt; display: outline; padding: 5px;">
-
-             <?php echo $alert_text; ?>
+         <h2>Aperçu ajout</h2>
+         <div id="preview" style="height: <?php echo $alert_text_size; ?>px; background-color: <?php echo $alert_background_color; ?>; color: <?php echo $alert_text_color; ?>; font-size: <?php echo $alert_text_size; ?>pt; padding: 10px">
+            <?php echo $alert_text; ?>
          </div>
          <br>
         <script>
@@ -250,6 +249,7 @@ function alert_page()
             preview.style.backgroundColor = alertBackgroundColor;
             preview.style.color = alertTextColor;
             preview.style.fontSize = alertTextSize + 'pt';
+            preview.style.height =alertTextSize + 'px';
             preview.innerHTML = alertText;
         }
     </script>

@@ -406,7 +406,7 @@ function gie_alertes_edit_callback()
             </form>
         </div>
         <h2>Aperçu :</h2>
-         <div id="preview" style="background-color: <?php echo $alert_background_color; ?>; color: <?php echo $alert_text_color; ?>; font-size: <?php echo $alert_text_size; ?>pt; display: outline; padding: 5px;">
+         <div id="preview" style="height: <?php echo $alert_text_size; ?>px; background-color: <?php echo $alert_background_color; ?>; color: <?php echo $alert_text_color; ?>; font-size: <?php echo $alert_text_size; ?>pt; display: outline; padding: 5px;">
 
              <?php echo $alert_text; ?>
          </div>
@@ -422,6 +422,7 @@ function gie_alertes_edit_callback()
             preview.style.backgroundColor = alertBackgroundColor;
             preview.style.color = alertTextColor;
             preview.style.fontSize = alertTextSize + 'pt';
+            preview.style.height =alertTextSize + 'px';
             preview.innerHTML = alertText;
         }
     </script>
@@ -508,7 +509,7 @@ function display_alert_banner() {
 
         foreach ($active_alerts as $alert) {
             // Construire les styles CSS personnalisés
-            $styles = 'background-color: ' . esc_attr($alert->alert_background_color) . ' ; font-size: ' . esc_attr($alert->alert_text_size) .' px;';
+            $styles = 'background-color: ' . esc_attr($alert->alert_background_color) . ' ;';
 
             // Construire le code HTML du bandeau d'alerte avec les styles personnalisés
             echo '<div class="alert-banner" style="' . $styles . '">';
@@ -520,7 +521,7 @@ function display_alert_banner() {
                 $alert_class .= ' marquee';
             }
             
-            echo '<span class="' . $alert_class . '"><a href="' . esc_attr($alert->alert_link) . '" style="color: ' . esc_attr($alert->alert_text_color) . ';">' . esc_html($alert->alert_text) . '</a></span>';
+            echo '<span class="' . $alert_class . '"><a href="' . esc_attr($alert->alert_link) . '" style="color: ' . esc_attr($alert->alert_text_color) . '; font-size: ' . esc_attr($alert->alert_text_size) .'px;">' . esc_html($alert->alert_text) . '</a></span>';
             echo '<span class="close-button" onclick="closeAlert(this)">&#10006;</span>';
             echo '</div>';
         }
@@ -566,7 +567,6 @@ function enqueue_alert_scripts() {
     .alert-banner {
         display: none;
         width: 100%;
-        height: 40px; /* Hauteur fixe pour le défilement */
         padding: 10px;
         text-align: center;
         position: relative;
