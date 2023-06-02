@@ -55,6 +55,12 @@ function alert_page()
 {
     global $wpdb;
 
+    $alert_text = '';
+    $alert_text_size = '';
+    $alert_background_color = '';
+    $alert_text_color = '';
+
+
     if (isset($_POST['submit'])) {
         $alert_text = stripslashes($_POST['alert_text']);
         $alert_text_size = $_POST['alert_text_size'];
@@ -126,19 +132,19 @@ function alert_page()
         <h2> Personnaliser l'alerte </h2>
         <form method="post">
             <label for="alert_text">Texte de l'alerte :</label>
-            <input type="text" name="alert_text" id="alert_text" required style="width: 700px; height: 10px;">
+            <input type="text" name="alert_text" id="alert_text" required style="width: 700px; height: 10px;" onkeyup="updatePreview()">
             <br>
 
             <label for="alert_text_size">Taille du texte (en pt) :</label>
-            <input type="number" name="alert_text_size" id="alert_text_size" required>
+            <input type="number" name="alert_text_size" id="alert_text_size" required oninput="updatePreview()">
             <br>
 
             <label for="alert_background_color">Couleur de fond :</label>
-            <input type="color" name="alert_background_color" id="alert_background_color" required>
+            <input type="color" name="alert_background_color" id="alert_background_color" required onchange="updatePreview()">
             <br>
 
             <label for="alert_text_color">Couleur du texte :</label>
-            <input type="color" name="alert_text_color" id="alert_text_color" value="#FFFFFF" required>
+            <input type="color" name="alert_text_color" id="alert_text_color" value="#FFFFFF" required onchange="updatePreview()">
             <br>
             <?php /*
     <label for="alert_icon">Icône :</label>
@@ -191,52 +197,65 @@ function alert_page()
                                 $pages = get_pages();
                                 $evenements = get_posts(array('post_type' => 'event'));
 
-
                                 // Ajouter les options en fonction de la valeur sélectionnée
                                 foreach ($pages as $page) {
                                     echo 'if (radio.value === "pages") {';
-                                    echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($page) . '">' . str_replace("'", "\'", $page->post_title) . '</option>\';';
+                                    echo '  linkSelect.innerHTML += \'<option value="' . esc_url(get_permalink($page)) . '">' . esc_html($page->post_title) . '</option>\';';
                                     echo '}';
                                 }
-
+                                foreach ($articles as $article) {
+                                    echo 'if (radio.value === "articles") {';
+                                    echo '  linkSelect.innerHTML += \'<option value="' . esc_url(get_permalink($article)) . '">' . esc_html($article->post_title) . '</option>\';';
+                                    echo '}';
+                                }
                                 foreach ($evenements as $evenement) {
                                     echo 'if (radio.value === "evenements") {';
-                                    echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($evenement) . '">' . str_replace("'", "\'", $evenement->post_title) . '</option>\';';
-                                    echo '}';
-                                }
-
-                                foreach ($articles as $article) {
-                                    echo 'if (radio.value === "articles" || radio.value === "") {';
-                                    echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($article) . '">' . str_replace("'", "\'", $article->post_title). '</option>\';';
+                                    echo '  linkSelect.innerHTML += \'<option value="' . esc_url(get_permalink($evenement)) . '">' . esc_html($evenement->post_title) . '</option>\';';
                                     echo '}';
                                 }
                                 ?>
-
                             }
                         });
                     });
                 });
             </script>
-
-            <br>
-
-            <label for="alert_link_blank">Ouvrir le lien dans une nouvelle fenêtre </label>
+            <label for="alert_link_blank">Ouvrir le lien dans une nouvelle fenêtre :</label>
             <input type="checkbox" name="alert_link_blank" id="alert_link_blank">
             <br>
-            <label for="alert_display">Activer l'alerte</label>
-            <input type="checkbox" name="alert_display" id="alert_display">
+
+            <input type="checkbox" name="alert_display" id="alert_display" checked>
+            <label for="alert_display">Afficher l'alerte</label>
             <br>
-            <label for="alert_scroll">Défilement :</label>
-            <input type="checkbox" name="alert_scroll" id="alert_scroll" >
+
+            <input type="checkbox" name="alert_defil" id="alert_defil">
+            <label for="alert_defil">Faire défiler l'alerte</label>
             <br>
-            <input type="submit" name="submit" value="Ajouter">
+
+            <input type="submit" name="submit" value="Ajouter l'alerte">
         </form>
-    </div>
+         <h2>Aperçu :</h2>
+         <div id="preview" style="background-color: <?php echo $alert_background_color; ?>; color: <?php echo $alert_text_color; ?>; font-size: <?php echo $alert_text_size; ?>pt; display: outline; padding: 5px;">
+
+             <?php echo $alert_text; ?>
+         </div>
+         <br>
+        <script>
+        function updatePreview() {
+            var alertText = document.getElementById('alert_text').value;
+            var alertTextSize = document.getElementById('alert_text_size').value;
+            var alertBackgroundColor = document.getElementById('alert_background_color').value;
+            var alertTextColor = document.getElementById('alert_text_color').value;
+
+            var preview = document.getElementById('preview');
+            preview.style.backgroundColor = alertBackgroundColor;
+            preview.style.color = alertTextColor;
+            preview.style.fontSize = alertTextSize + 'pt';
+            preview.innerHTML = alertText;
+        }
+    </script>
+    <p>L'aperçu ne représente pas exactement ce qui sera affiché, il est surtout ici pour voir ce que donne les couleurs</p>
     <?php
 }
-
-
-
 // Inclure la bibliothèque Font Awesome
 add_action('wp_enqueue_scripts', 'load_font_awesome');
 function load_font_awesome()

@@ -245,6 +245,11 @@ function gie_alertes_edit_callback()
 {
     global $wpdb;
 
+    $alert_text = '';
+    $alert_text_size = '';
+    $alert_background_color = '';
+
+    $alert_text_color = '';
     if (isset($_GET['id'])) {
         $alert_id = $_GET['id'];
         $alert = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}gie_alertes WHERE alert_id = %d", $alert_id));
@@ -305,16 +310,16 @@ function gie_alertes_edit_callback()
             <h1>Modifier l'alerte</h1>
             <form method="post" action="">
                 <label for="alert_text">Texte de l'alerte :</label>
-                <input type="text" name="alert_text" id="alert_text" value="<?php echo $alert->alert_text; ?>" required style="width: 700px; height: 10px;"><br>
+                <input type="text" name="alert_text" id="alert_text" value="<?php echo $alert->alert_text; ?>" required style="width: 700px; height: 10px;" onkeyup="updatePreview()"><br>
 
                 <label for="alert_text_size">Taille du texte (en pt) :</label>
-                <input type="number" name="alert_text_size" id="alert_text_size" value="<?php echo $alert->alert_text_size; ?>" required><br>
+                <input type="number" name="alert_text_size" id="alert_text_size" value="<?php echo $alert->alert_text_size; ?>" required oninput="updatePreview()"><br>
 
                 <label for="alert_background_color">Couleur de fond :</label>
-                <input type="color" name="alert_background_color" id="alert_background_color" value="<?php echo $alert->alert_background_color; ?>" required><br>
+                <input type="color" name="alert_background_color" id="alert_background_color" value="<?php echo $alert->alert_background_color; ?>" required onchange="updatePreview()"><br>
 
                 <label for="alert_text_color">Couleur du texte :</label>
-                <input type="color" name="alert_text_color" id="alert_text_color" value="<?php echo $alert->alert_text_color; ?>" required><br>
+                <input type="color" name="alert_text_color" id="alert_text_color" value="<?php echo $alert->alert_text_color; ?>" required onchange="updatePreview()"><br>
                 <?php
                 /*
                 <label for="alert_icon">Icône :</label>
@@ -400,6 +405,27 @@ function gie_alertes_edit_callback()
                 <input type="submit" name="update_alert" value="Enregistrer les modifications">
             </form>
         </div>
+        <h2>Aperçu :</h2>
+         <div id="preview" style="background-color: <?php echo $alert_background_color; ?>; color: <?php echo $alert_text_color; ?>; font-size: <?php echo $alert_text_size; ?>pt; display: outline; padding: 5px;">
+
+             <?php echo $alert_text; ?>
+         </div>
+         <br>
+        <script>
+        function updatePreview() {
+            var alertText = document.getElementById('alert_text').value;
+            var alertTextSize = document.getElementById('alert_text_size').value;
+            var alertBackgroundColor = document.getElementById('alert_background_color').value;
+            var alertTextColor = document.getElementById('alert_text_color').value;
+
+            var preview = document.getElementById('preview');
+            preview.style.backgroundColor = alertBackgroundColor;
+            preview.style.color = alertTextColor;
+            preview.style.fontSize = alertTextSize + 'pt';
+            preview.innerHTML = alertText;
+        }
+    </script>
+    <p>L'aperçu ne représente pas exactement ce qui sera affiché, il est surtout ici pour voir ce que donne les couleurs</p>
         <?php
     }
 }
