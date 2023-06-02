@@ -533,6 +533,7 @@ function enqueue_alert_scripts() {
         .alert-banner {
             display: none;
             width: 100%;
+            height: 40px; /* Hauteur fixe pour le défilement */
             padding: 10px;
             text-align: center;
             position: relative;
@@ -546,7 +547,16 @@ function enqueue_alert_scripts() {
         .alert-message {
             display: inline-block;
             margin-right: 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: defilement 10s linear infinite;
         }
+        
+        @keyframes defilement {
+            0% { margin-left: -100%; }
+            100% { margin-left: 100%; }
+          }
+        
 
         .close-button {
             position: absolute;
