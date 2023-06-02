@@ -521,7 +521,6 @@ function enqueue_alert_scripts() {
     // Intégration directe du CSS
     echo '<style type="text/css">
         .alert-wrapper {
-            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
