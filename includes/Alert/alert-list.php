@@ -261,6 +261,7 @@ function gie_alertes_edit_callback()
             $alert_link_type = $_POST['alert_link_type'];
             $alert_link = $_POST['alert_link'];
             $alert_link_blank = isset($_POST['alert_link_blank']) ? 1 : 0;
+            $alert_defil = isset($_POST['alert_defil']) ? 1 : 0;
 
             // Mettre à jour les valeurs de l'alerte dans la base de données
             $wpdb->update(
@@ -275,7 +276,8 @@ function gie_alertes_edit_callback()
                     'alert_date_end' => $alert_date_end,
                     'alert_link_type' => $alert_link_type,
                     'alert_link' => $alert_link,
-                    'alert_link_blank' => $alert_link_blank
+                    'alert_link_blank' => $alert_link_blank,
+                    'alert_defil' => $alert_defil
                 ),
                 array('alert_id' => $alert_id)
             );
@@ -306,16 +308,13 @@ function gie_alertes_edit_callback()
                 <input type="text" name="alert_text" id="alert_text" value="<?php echo $alert->alert_text; ?>" required style="width: 700px; height: 10px;"><br>
 
                 <label for="alert_text_size">Taille du texte (en pt) :</label>
-                <input type="number" name="alert_text_size" id="alert_text_size" value="<?php echo $alert->alert_text_size; ?>"
-                    required><br>
+                <input type="number" name="alert_text_size" id="alert_text_size" value="<?php echo $alert->alert_text_size; ?>" required><br>
 
                 <label for="alert_background_color">Couleur de fond :</label>
-                <input type="color" name="alert_background_color" id="alert_background_color"
-                    value="<?php echo $alert->alert_background_color; ?>" required><br>
+                <input type="color" name="alert_background_color" id="alert_background_color" value="<?php echo $alert->alert_background_color; ?>" required><br>
 
                 <label for="alert_text_color">Couleur du texte :</label>
-                <input type="color" name="alert_text_color" id="alert_text_color" value="<?php echo $alert->alert_text_color; ?>"
-                    required><br>
+                <input type="color" name="alert_text_color" id="alert_text_color" value="<?php echo $alert->alert_text_color; ?>" required><br>
                 <?php
                 /*
                 <label for="alert_icon">Icône :</label>
@@ -323,89 +322,88 @@ function gie_alertes_edit_callback()
                 */
                 ?>
                 <label for="alert_date_start">Date de début :</label>
-                <input type="date" name="alert_date_start" id="alert_date_start" value="<?php echo $alert->alert_date_start; ?>"
-                    required><br>
+                <input type="date" name="alert_date_start" id="alert_date_start" value="<?php echo $alert->alert_date_start; ?>" required><br>
 
                 <label for="alert_date_end">Date de fin :</label>
-                <input type="date" name="alert_date_end" id="alert_date_end" value="<?php echo $alert->alert_date_end; ?>"
-                    required><br>
+                <input type="date" name="alert_date_end" id="alert_date_end" value="<?php echo $alert->alert_date_end; ?>" required><br>
 
-                    <label for="alert_link_type">Type de lien :</label><br>
-      <input type="radio" name="alert_link_type" value="null" checked> Aucun<br>
-      <input type="radio" name="alert_link_type" value="custom"> Custom<br>
-      <input type="radio" name="alert_link_type" value="articles"> Articles<br>
-      <input type="radio" name="alert_link_type" value="pages"> Pages<br>
-      <input type="radio" name="alert_link_type" value="evenements"> Événements<br>
+                <label for="alert_link_type">Type de lien :</label><br>
+                <input type="radio" name="alert_link_type" value="null" checked> Aucun<br>
+                <input type="radio" name="alert_link_type" value="custom"> Custom<br>
+                <input type="radio" name="alert_link_type" value="articles"> Articles<br>
+                <input type="radio" name="alert_link_type" value="pages"> Pages<br>
+                <input type="radio" name="alert_link_type" value="evenements"> Événements<br>
 
-      <div id="custom_link_container" style="display: none;">
-        <input type="text" name="custom_link" id="custom_link">
-      </div>
-      <select name="alert_link" id="alert_link">
-      <option value="">
-      </select>
-      <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          var linkTypeRadios = document.querySelectorAll('input[type="radio"][name="alert_link_type"]');
-          var linkSelect = document.querySelector('#alert_link');
-          var customLinkContainer = document.querySelector('#custom_link_container');
-          linkSelect.style.display = "none";
-          linkTypeRadios.forEach(function (radio) {
-            radio.addEventListener('change', function () {
-              if (radio.value === "null") {
-                linkSelect.style.display = "none"; // La valeur de alert_link est nulle
-                customLinkContainer.style.display = "none";
-              } else if (radio.value === "custom") {
-                linkSelect.style.display = "none";
-                customLinkContainer.style.display = "block";
-              } else {
-                linkSelect.style.display = "block";
-                customLinkContainer.style.display = "none";
-                linkSelect.innerHTML = ""; // Vider la liste déroulante
-                
-                  <?php
-                  // Récupérer tous les articles, pages et événements
-                  $articles = get_posts(array('post_type' => 'post'));
-                  $pages = get_pages();
-                  $evenements = get_posts(array('post_type' => 'event'));
+                <div id="custom_link_container" style="display: none;">
+                    <input type="text" name="custom_link" id="custom_link">
+                </div>
+                <select name="alert_link" id="alert_link">
+                    <option value=""></option>
+                </select>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        var linkTypeRadios = document.querySelectorAll('input[type="radio"][name="alert_link_type"]');
+                        var linkSelect = document.querySelector('#alert_link');
+                        var customLinkContainer = document.querySelector('#custom_link_container');
+                        linkSelect.style.display = "none";
+                        linkTypeRadios.forEach(function (radio) {
+                            radio.addEventListener('change', function () {
+                                if (radio.value === "null") {
+                                    linkSelect.style.display = "none"; // La valeur de alert_link est nulle
+                                    customLinkContainer.style.display = "none";
+                                } else if (radio.value === "custom") {
+                                    linkSelect.style.display = "none";
+                                    customLinkContainer.style.display = "block";
+                                } else {
+                                    linkSelect.style.display = "block";
+                                    customLinkContainer.style.display = "none";
+                                    linkSelect.innerHTML = ""; // Vider la liste déroulante
 
+                                    <?php
+                                    // Récupérer tous les articles, pages et événements
+                                    $articles = get_posts(array('post_type' => 'post'));
+                                    $pages = get_pages();
+                                    $evenements = get_posts(array('post_type' => 'event'));
 
-                  // Ajouter les options en fonction de la valeur sélectionnée
-                  foreach ($pages as $page) {
-                    echo 'if (radio.value === "pages") {';
-                    echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($page) . '">' . str_replace("'", "\'", $page->post_title) . '</option>\';';
-                    echo '}';
-                  }
+                                    // Ajouter les options en fonction de la valeur sélectionnée
+                                    foreach ($pages as $page) {
+                                        echo 'if (radio.value === "pages") {';
+                                        echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($page) . '">' . str_replace("'", "\'", $page->post_title) . '</option>\';';
+                                        echo '}';
+                                    }
 
-                  foreach ($evenements as $evenement) {
-                    echo 'if (radio.value === "evenements") {';
-                    echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($evenement) . '">' . str_replace("'", "\'", $evenement->post_title) . '</option>\';';
-                    echo '}';
-                  }
+                                    foreach ($evenements as $evenement) {
+                                        echo 'if (radio.value === "evenements") {';
+                                        echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($evenement) . '">' . str_replace("'", "\'", $evenement->post_title) . '</option>\';';
+                                        echo '}';
+                                    }
 
-                  foreach ($articles as $article) {
-                    echo 'if (radio.value === "articles" || radio.value === "") {';
-                    echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($article) . '">' . str_replace("'", "\'", $article->post_title). '</option>\';';
-                    echo '}';
-                  }
-                  ?>
-                
-              }
-            });
-          });
-        });
-      </script>
+                                    foreach ($articles as $article) {
+                                        echo 'if (radio.value === "articles" || radio.value === "") {';
+                                        echo '  linkSelect.innerHTML += \'<option value="' . get_permalink($article) . '">' . str_replace("'", "\'", $article->post_title) . '</option>\';';
+                                        echo '}';
+                                    }
+                                    ?>
 
-      <br>
-
-                <label for="alert_link_blank">Ouvrir le lien dans une nouvelle fenêtre </label>
+                                }
+                            });
+                        });
+                    });
+                </script>
+                <br>
+                <label for="alert_link_blank">Ouvrir le lien dans une nouvelle fenêtre</label>
                 <input type="checkbox" name="alert_link_blank" id="alert_link_blank" <?php echo $alert->alert_link_blank ? 'checked' : ''; ?>><br>
-
+                <br>
+                <label for="alert_scroll">Défilement :</label>
+                <input type="checkbox" name="alert_defil" id="alert_defil" <?php echo $alert->alert_defil ? 'checked' : ''; ?>>
+                <br>
                 <input type="submit" name="update_alert" value="Enregistrer les modifications">
             </form>
         </div>
         <?php
     }
 }
+
 function activate_alert()
 {
     // Récupère l'ID de l'alerte depuis l'URL
@@ -475,6 +473,9 @@ function display_alert_banner() {
     // Récupérer les alertes actives dont la date de début est antérieure ou égale à la date actuelle et la date de fin est postérieure ou égale à la date actuelle
     $active_alerts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}gie_alertes WHERE alert_display = 1 AND alert_date_start <= '$current_date' AND alert_date_end >= '$current_date' ORDER BY alert_id DESC");
 
+    // Récupérer la valeur de $alert_defil depuis la base de données
+    $alert_defil = $wpdb->get_var("SELECT alert_defil FROM {$wpdb->prefix}gie_alertes WHERE alert_display = 1 AND alert_date_start <= '$current_date' AND alert_date_end >= '$current_date' LIMIT 1");
+
     // Vérifier s'il y a des alertes actives
     if (count($active_alerts) > 0) {
         echo '<div class="alert-wrapper">';
@@ -486,7 +487,14 @@ function display_alert_banner() {
             // Construire le code HTML du bandeau d'alerte avec les styles personnalisés
             echo '<div class="alert-banner" style="' . $styles . '">';
             echo '<span class="alert-icon">' . esc_attr($alert->alert_icon) . '</span>';
-            echo '<span class="alert-message"><a href="' . esc_attr($alert->alert_link) . '" style=" color: ' . esc_attr($alert->alert_text_color) . ';">' . esc_html($alert->alert_text) . '</a></span>';
+            
+            // Vérifier si le défilement doit être activé
+            $alert_class = 'alert-message';
+            if ($alert_defil) {
+                $alert_class .= ' marquee';
+            }
+            
+            echo '<span class="' . $alert_class . '"><a href="' . esc_attr($alert->alert_link) . '" style="color: ' . esc_attr($alert->alert_text_color) . ';">' . esc_html($alert->alert_text) . '</a></span>';
             echo '<span class="close-button" onclick="closeAlert(this)">&#10006;</span>';
             echo '</div>';
         }
@@ -494,7 +502,6 @@ function display_alert_banner() {
         echo '</div>';
     }
 }
-
 add_action('wp_body_open', 'display_alert_banner');
 add_action('admin_post_activate_alert', 'activate_alert');
 add_action('admin_post_deactivate_alert', 'deactivate_alert');
@@ -520,53 +527,55 @@ function enqueue_alert_scripts() {
 
     // Intégration directe du CSS
     echo '<style type="text/css">
-        .alert-wrapper {
-            top: 0;
-            left: 0;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 99999; /* Valeur z-index plus élevée */
-        }
-        
-        .alert-banner {
-            display: none;
-            width: 100%;
-            height: 40px; /* Hauteur fixe pour le défilement */
-            padding: 10px;
-            text-align: center;
-            position: relative;
-        }
+    .alert-wrapper {
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 99999; /* Valeur z-index plus élevée */
+    }
+    
+    .alert-banner {
+        display: none;
+        width: 100%;
+        height: 40px; /* Hauteur fixe pour le défilement */
+        padding: 10px;
+        text-align: center;
+        position: relative;
+    }
 
-        .alert-icon {
-            display: inline-block;
-            margin-right: 5px;
-        }
+    .alert-icon {
+        display: inline-block;
+        margin-right: 5px;
+    }
 
-        .alert-message {
-            display: inline-block;
-            margin-right: 10px;
-            overflow: hidden;
-            white-space: nowrap;
-            animation: defilement 10s linear infinite;
-        }
-        
-        @keyframes defilement {
-            0% { margin-left: -100%; }
-            100% { margin-left: 100%; }
-          }
-        
+    .alert-message {
+        display: inline-block;
+        margin-right: 10px;
+        overflow: hidden;
+        white-space: nowrap;
+    }
 
-        .close-button {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            cursor: pointer;
-        }
-        
-        body {
-            margin-top: 100px; /* Ajoutez une marge en haut pour laisser de la place aux alertes */
-        }
-    </style>';
+    .alert-message.marquee {
+        animation: defilement 10s linear infinite;
+    }
+    
+    @keyframes defilement {
+        0% { margin-left: -100%; }
+        100% { margin-left: 100%; }
+    }
+
+    .close-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+    }
+    
+    body {
+        margin-top: 100px; /* Ajoutez une marge en haut pour laisser de la place aux alertes */
+    }
+</style>';
 }
