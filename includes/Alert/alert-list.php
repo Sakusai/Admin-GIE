@@ -559,12 +559,12 @@ function enqueue_alert_scripts() {
     }
 
     .alert-message.marquee {
-        animation: defilement 10s linear infinite;
+        animation: defilement 20s linear infinite;
     }
     
     @keyframes defilement {
-        0% { margin-left: -100%; }
-        100% { margin-left: 100%; }
+        0% { margin-left: 100%; }
+        100% { margin-left: -100%; }
     }
 
     .close-button {
