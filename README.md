@@ -12,7 +12,9 @@ Admin GIE propose les services suivants :
  - Système d'alerte
 
  ## Crédits
- NITZKI Cyril - GIE Convergence 
+ NITZKI Cyril - GIE Convergence
+
  MATON Erwann - GIE Convergence 
+ 
  MARTINET Lydie - GIE Convergence 
  
